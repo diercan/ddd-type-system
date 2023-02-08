@@ -6,5 +6,5 @@ public enum InvoiceStatus
     Invalid,
     WaitingApproval,
     Approved,
-    Payed
+    Paid
 }

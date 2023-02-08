@@ -3,7 +3,7 @@ using Sample.FinanceSystem.Domain.Types.Common;
 
 namespace Sample.FinanceSystem.Domain.Types.Address
 {
-    public record City : AbsttactStringValueType, IStringValueType<City>
+    public record City : AbstactStringValueType, IStringValueType<City>
     {
         private City(string value) : base(value) { }
 

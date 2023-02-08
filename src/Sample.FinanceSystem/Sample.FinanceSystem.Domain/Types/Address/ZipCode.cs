@@ -4,7 +4,7 @@ using Sample.FinanceSystem.Domain.Types.Common;
 
 namespace Sample.FinanceSystem.Domain.Types.Address;
 
-public record ZipCode : AbsttactStringValueType, IStringValueType<ZipCode>
+public record ZipCode : AbstactStringValueType, IStringValueType<ZipCode>
 {
     private ZipCode(string value) : base(value) { }
 
