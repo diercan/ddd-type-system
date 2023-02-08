@@ -8,6 +8,11 @@
 
   <ItemGroup>
     <PackageReference Include="CSharp.Choices" Version="2.1.1" />
+    <PackageReference Include="LanguageExt.Core" Version="4.4.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Types\Customer\" />
   </ItemGroup>
 
 </Project>

@@ -1,12 +1,10 @@
-﻿namespace Sample.FinanceSystem.Domain.WhatsWrong
+﻿namespace Sample.FinanceSystem.Domain.WhatsWrong;
+public enum InvoiceStatus
 {
-    public enum InvoiceStatus
-    {
-        Unvalidated,
-        Calculated,
-        Invalid,
-        WaitingApproval,
-        Approved
-        Payed
-    }
+    Unvalidated,
+    Calculated,
+    Invalid,
+    WaitingApproval,
+    Approved,
+    Payed
 }
