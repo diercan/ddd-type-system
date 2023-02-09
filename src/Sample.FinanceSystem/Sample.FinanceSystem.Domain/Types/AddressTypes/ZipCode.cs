@@ -2,9 +2,9 @@
 using LanguageExt;
 using Sample.FinanceSystem.Domain.Types.Common;
 
-namespace Sample.FinanceSystem.Domain.Types.Address;
+namespace Sample.FinanceSystem.Domain.Types.AddressTypes;
 
-public record ZipCode : AbstactStringValueType, IStringValueType<ZipCode>
+public record ZipCode : AbstractStringValueType, IStringValueType<ZipCode>
 {
     private ZipCode(string value) : base(value) { }
 

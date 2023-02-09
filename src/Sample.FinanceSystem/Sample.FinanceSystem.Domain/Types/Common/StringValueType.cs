@@ -3,10 +3,10 @@ using LanguageExt;
 
 namespace Sample.FinanceSystem.Domain.Types.Common
 {
-    public abstract record AbstactStringValueType
+    public abstract record AbstractStringValueType
     {
         public string Value { get; }
-        protected AbstactStringValueType(string value)
+        protected AbstractStringValueType(string value)
         {
             Value = value;
         }
@@ -14,7 +14,7 @@ namespace Sample.FinanceSystem.Domain.Types.Common
         public override string ToString() => Value;
     }
 
-    internal interface IStringValueType<T> where T : AbstactStringValueType
+    internal interface IStringValueType<T> where T : AbstractStringValueType
     {
         public static abstract Either<ErrorMessage, T> Parse(string value);
 
