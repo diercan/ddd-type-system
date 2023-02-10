@@ -8,7 +8,7 @@ public record AddressLine : AbstractStringValueType, IStringValueType<AddressLin
 
     public static Either<ErrorMessage, AddressLine> Parse(string value) =>
         IStringValueType<AddressLine>.Parse(
-            value => value.Length <= 200,
+            value => value.Length > 2 && value.Length <= 200,
             (value) => new AddressLine(value),
             value);
 }

@@ -11,5 +11,5 @@ public record ZipCode : AbstractStringValueType, IStringValueType<ZipCode>
     public static Either<ErrorMessage, ZipCode> Parse(string value)
         => IStringValueType<ZipCode>.Parse(zipCodeFormat, (value) => new ZipCode(value), value);
 
-    private static readonly Regex zipCodeFormat = new("^\\d{9}$");
+    private static readonly Regex zipCodeFormat = new("^\\d{6}$");
 }

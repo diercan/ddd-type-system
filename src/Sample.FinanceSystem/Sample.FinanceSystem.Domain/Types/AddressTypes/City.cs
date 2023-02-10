@@ -8,7 +8,7 @@ public record City : AbstractStringValueType, IStringValueType<City>
 
     public static Either<ErrorMessage, City> Parse(string value) =>
         IStringValueType<City>.Parse(
-            value => value.Length <= 50,
+            value => value.Length > 2 && value.Length <= 50,
             (value) => new City(value),
             value);
 }

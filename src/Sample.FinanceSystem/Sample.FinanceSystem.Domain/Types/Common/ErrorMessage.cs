@@ -2,6 +2,6 @@
 {
     public record ErrorMessage(string Message)
     {
-        public override string ToString() => "Message";
+        public override string ToString() => Message;
     }
 }
