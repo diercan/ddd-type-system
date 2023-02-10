@@ -13,5 +13,5 @@ public record VatRegistrationNumber : AbstractStringValueType, IStringValueType<
             (value) => new VatRegistrationNumber(value),
             value);
 
-    private static readonly Regex vatRegistrationNumberFormat = new("^[A-Za-z]{2}[0-9]{2}$");
+    private static readonly Regex vatRegistrationNumberFormat = new("^[A-Za-z]{2}[0-9]{6}$");
 }

@@ -27,8 +27,4 @@
     <ProjectReference Include="..\Sample.FinanceSystem.Domain\Sample.FinanceSystem.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Types\AddressTypes\" />
-  </ItemGroup>
-
 </Project>
