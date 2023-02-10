@@ -3,7 +3,7 @@ using Sample.FinanceSystem.Domain.Types.Common;
 
 namespace Sample.FinanceSystem.Domain.Types.Vat
 {
-    public record VatCode : AbstactStringValueType, IStringValueType<VatCode>
+    public record VatCode : AbstractStringValueType, IStringValueType<VatCode>
     {
         public VatCode(string value) : base(value) { }
 

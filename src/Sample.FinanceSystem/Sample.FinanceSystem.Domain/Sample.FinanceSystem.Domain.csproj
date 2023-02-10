@@ -7,12 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Types\Customer\**" />
-    <EmbeddedResource Remove="Types\Customer\**" />
-    <None Remove="Types\Customer\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="CSharp.Choices" Version="2.1.1" />
     <PackageReference Include="LanguageExt.Core" Version="4.4.2" />
   </ItemGroup>
