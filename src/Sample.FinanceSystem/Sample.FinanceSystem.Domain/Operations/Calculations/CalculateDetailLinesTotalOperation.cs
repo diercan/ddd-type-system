@@ -11,9 +11,8 @@ namespace Sample.FinanceSystem.Domain.Operations.Calculations;
 
 internal class CalculateDetailLinesTotalOperation : InvoiceOperation<UnvalidatedInvoice>
 {
-    public override IInvoices Run(UnvalidatedInvoice input, InvoiceContext context)
-    {
-        return new CalculatedInvoice(
+    public override IInvoices Run(UnvalidatedInvoice input, InvoiceContext context) 
+        => new CalculatedInvoice(
             input.Customer,
             input.CreationDate,
             // Todo: Due date should already be available from the CalculateDueDateOperation? Need more states for the invoice?
@@ -21,7 +20,6 @@ internal class CalculateDetailLinesTotalOperation : InvoiceOperation<Unvalidated
             // Todo: The invoice total can be made as a separate operation that sums up the detail lines?
             new InvoiceTotal(new Money(0, Currency.RON), new Money(0, Currency.RON), new Money(0, Currency.RON)),
             input.Lines.Select(CalculateDetailLine));
-    }
 
     private static DetailLine CalculateDetailLine(DetailLine invoiceLine)
     {
