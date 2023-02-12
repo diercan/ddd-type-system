@@ -73,16 +73,14 @@ public record Money : AbstractDecimalValueType, IDecimalValueType<Money>
         return new Money(left.Value - right.Value, left.Currency);
     }
 
-    public static Money operator *(Money left, Money right)
+    public static Money operator *(Money left, decimal right)
     {
-        EnsureSameCurrency(left, right);
-        return new Money(left.Value * right.Value, left.Currency);
+        return new Money(left.Value * right, left.Currency);
     }
 
-    public static Money operator /(Money left, Money right)
+    public static Money operator /(Money left, decimal right)
     {
-        EnsureSameCurrency(left, right);
-        return new Money(left.Value / right.Value, left.Currency);
+        return new Money(left.Value / right, left.Currency);
     }
 
     private static void EnsureSameCurrency(Money left, Money right)
