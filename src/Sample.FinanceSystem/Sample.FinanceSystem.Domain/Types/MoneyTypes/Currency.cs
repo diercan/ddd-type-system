@@ -1,4 +1,4 @@
-﻿namespace Sample.FinanceSystem.Domain.Types.Money;
+﻿namespace Sample.FinanceSystem.Domain.Types.MoneyTypes;
 
 /// <summary>
 /// Represents world currency by numeric and alphabetic values, as per ISO 4217:

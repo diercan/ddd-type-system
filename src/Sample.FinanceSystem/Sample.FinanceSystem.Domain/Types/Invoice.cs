@@ -1,5 +1,6 @@
 ﻿using Sample.FinanceSystem.Domain.Types.Common;
 using Sample.FinanceSystem.Domain.Types.CustomerTypes;
+using Sample.FinanceSystem.Domain.Types.InvoiceDetailLineTypes;
 using Sample.FinanceSystem.Domain.Types.InvoiceTypes;
 using static Sample.FinanceSystem.Domain.Types.PaymentTypes.Payment;
 
@@ -14,12 +15,16 @@ public static partial class Invoice
         public DateOnly CreationDate { get; private init; }
         public Customer Customer { get; private init; }
 
-        //TODO add details
+        public IReadOnlyList<DetailLine> Lines { get; private init; }
 
-        internal UnvalidatedInvoice(Customer customer, DateOnly creationDate)
+        internal UnvalidatedInvoice(
+            Customer customer,
+            DateOnly creationDate,
+            IEnumerable<DetailLine> lines)
         {
             Customer = customer;
             CreationDate = creationDate;
+            Lines = lines.ToList().AsReadOnly();
         }
     }
 
@@ -28,21 +33,23 @@ public static partial class Invoice
         public DateOnly CreationDate { get; private init; }
         public DateOnly DueDate { get; private init; }
         public Customer Customer { get; private init; }
-        //TODO use money type
+
         public InvoiceTotal Total { get; private init; }
 
-        //TODO add details
+        public IReadOnlyList<DetailLine> Lines { get; private init; }
 
         internal CalculatedInvoice(
             Customer customer,
             DateOnly creationDate,
             DateOnly dueDate,
-            InvoiceTotal total)
+            InvoiceTotal total,
+            IEnumerable<DetailLine> lines)
         {
             Customer = customer;
             CreationDate = creationDate;
             DueDate = dueDate;
             Total = total;
+            Lines = lines.ToList().AsReadOnly();
         }
     }
 
@@ -51,17 +58,19 @@ public static partial class Invoice
         public DateOnly CreationDate { get; private init; }
         public Customer Customer { get; private init; }
 
-        //TODO add details
+        public IReadOnlyList<DetailLine> Lines { get; private init; }
 
         public IReadOnlyCollection<ErrorMessage> Errors { get; private init; }
 
         internal InvalidInvoice(
             Customer customer,
             DateOnly creationDate,
-            IEnumerable<ErrorMessage> errors)
+            IEnumerable<ErrorMessage> errors,
+            IEnumerable<DetailLine> lines)
         {
             Customer = customer;
             CreationDate = creationDate;
+            Lines = lines.ToList().AsReadOnly();
             Errors = errors.ToList().AsReadOnly();
         }
     }
@@ -72,23 +81,25 @@ public static partial class Invoice
         public DateOnly DueDate { get; private init; }
         public Customer Customer { get; private init; }
         public InvoiceApproval Approval { get; set; }
-        //TODO use money type
+
         public InvoiceTotal Total { get; private init; }
 
-        //TODO add details
+        public IReadOnlyList<DetailLine> Lines { get; private init; }
 
         internal ApprovedInvoice(
             Customer customer,
             DateOnly creationDate,
             DateOnly dueDate,
             InvoiceApproval approval,
-            InvoiceTotal total)
+            InvoiceTotal total,
+            IEnumerable<DetailLine> lines)
         {
             Customer = customer;
             CreationDate = creationDate;
             DueDate = dueDate;
             Total = total;
             Approval = approval;
+            Lines = lines.ToList().AsReadOnly();
         }
     }
 
@@ -98,11 +109,12 @@ public static partial class Invoice
         public DateOnly DueDate { get; private init; }
         public Customer Customer { get; private init; }
         public InvoiceApproval Approval { get; set; }
-        //TODO use money type
+        
         public InvoiceTotal Total { get; private init; }
-        public IPayment Payment { get; private init; }
 
-        //TODO add details
+        public IReadOnlyList<DetailLine> Lines { get; private init; }
+
+        public IPayment Payment { get; private init; }
 
         internal PaidInvoice(
             Customer customer,
@@ -110,13 +122,15 @@ public static partial class Invoice
             DateOnly dueDate,
             InvoiceApproval approval,
             InvoiceTotal total,
-            IPayment payment)
+            IPayment payment,
+            IEnumerable<DetailLine> lines)
         {
             Customer = customer;
             CreationDate = creationDate;
             DueDate = dueDate;
             Approval = approval;
             Total = total;
+            Lines = lines.ToList().AsReadOnly();
             Payment = payment;
         }
     }
