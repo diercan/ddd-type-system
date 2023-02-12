@@ -1,7 +1,7 @@
 ﻿using LanguageExt;
 using Sample.FinanceSystem.Domain.Types.Common;
 
-namespace Sample.FinanceSystem.Domain.Types.Vat
+namespace Sample.FinanceSystem.Domain.Types.VatTypes
 {
     public record VatPercentage : AbstractDecimalValueType, IDecimalValueType<VatPercentage>
     {
