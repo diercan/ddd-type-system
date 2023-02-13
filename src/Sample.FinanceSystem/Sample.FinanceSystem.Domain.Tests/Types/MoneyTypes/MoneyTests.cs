@@ -1,4 +1,4 @@
-﻿using Sample.FinanceSystem.Domain.Types.Money;
+using Sample.FinanceSystem.Domain.Types.MoneyTypes;
 
 namespace Sample.FinanceSystem.Domain.Tests.Types.MoneyTypes
 {
@@ -16,8 +16,6 @@ namespace Sample.FinanceSystem.Domain.Tests.Types.MoneyTypes
             Assert.Throws<ArithmeticException>(() => euro > gbp);
             Assert.Throws<ArithmeticException>(() => euro + gbp);
             Assert.Throws<ArithmeticException>(() => euro - gbp);
-            Assert.Throws<ArithmeticException>(() => euro * gbp);
-            Assert.Throws<ArithmeticException>(() => euro / gbp);
 
             (euro != gbp).Should().BeTrue();
             (euro == gbp).Should().BeFalse();
@@ -40,8 +38,8 @@ namespace Sample.FinanceSystem.Domain.Tests.Types.MoneyTypes
             (amount3 >= amount1).Should().BeTrue();
             (amount1 + amount2).Should().Be(new Money(amount1.Value + amount2.Value, Currency.RON));
             (amount1 - amount2).Should().Be(new Money(amount1.Value - amount2.Value, Currency.RON));
-            (amount1 * amount2).Should().Be(new Money(amount1.Value * amount2.Value, Currency.RON));
-            (amount1 / amount2).Should().Be(new Money(amount1.Value / amount2.Value, Currency.RON));
+            (amount1 * 2).Should().Be(new Money(amount1.Value * 2, Currency.RON));
+            (amount1 / 2).Should().Be(new Money(amount1.Value / 2, Currency.RON));
         }
 
         [Theory]
