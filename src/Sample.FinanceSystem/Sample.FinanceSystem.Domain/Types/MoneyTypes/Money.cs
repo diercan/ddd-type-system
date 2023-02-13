@@ -1,6 +1,7 @@
+using System.Globalization;
 using LanguageExt;
 using Sample.FinanceSystem.Domain.Types.Common;
-using System.Globalization;
+using static Sample.FinanceSystem.Domain.Types.Common.ErrorMessage;
 
 namespace Sample.FinanceSystem.Domain.Types.MoneyTypes;
 
@@ -29,10 +30,10 @@ public record Money : AbstractDecimalValueType, IDecimalValueType<Money>
     // Todo: For Money, do we need Parse methods? Not sure what constraints to apply to the amounts
     //       Might just want to focus here on the fact that should not be able to do operations on amounts with different currencies
     //       and also that any operation results in another Money object with same currency.
-    public static Either<ErrorMessage, Money> Parse(decimal value)
+    public static Either<ValidationError, Money> Parse(decimal value)
         => Parse(value, Currency.RON);
 
-    public static Either<ErrorMessage, Money> Parse(decimal value, Currency currency)
+    public static Either<ValidationError, Money> Parse(decimal value, Currency currency)
     {
         return new Money(value, currency);
     }

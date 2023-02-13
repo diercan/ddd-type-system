@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.FinanceSystem.Data",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.FinanceSystem.Domain.Tests", "Sample.FinanceSystem.Domain.Tests\Sample.FinanceSystem.Domain.Tests.csproj", "{8EBFB209-AC5A-44A3-B541-7DFDC27211EE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample.FinanceSystem.Domain.WhatsWrong", "Sample.FinanceSystem.Domain.WhatsWrong\Sample.FinanceSystem.Domain.WhatsWrong.csproj", "{32B64972-2E09-4750-936B-240FDBCE58F8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.FinanceSystem.Domain.WhatsWrong", "Sample.FinanceSystem.Domain.WhatsWrong\Sample.FinanceSystem.Domain.WhatsWrong.csproj", "{32B64972-2E09-4750-936B-240FDBCE58F8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample.FinanceSystem.Api.Models", "Sample.FinanceSystem.Api.Models\Sample.FinanceSystem.Api.Models.csproj", "{2E5C2433-5318-495C-A247-1F1CCD110D6A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{32B64972-2E09-4750-936B-240FDBCE58F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{32B64972-2E09-4750-936B-240FDBCE58F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{32B64972-2E09-4750-936B-240FDBCE58F8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2E5C2433-5318-495C-A247-1F1CCD110D6A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2E5C2433-5318-495C-A247-1F1CCD110D6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2E5C2433-5318-495C-A247-1F1CCD110D6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2E5C2433-5318-495C-A247-1F1CCD110D6A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

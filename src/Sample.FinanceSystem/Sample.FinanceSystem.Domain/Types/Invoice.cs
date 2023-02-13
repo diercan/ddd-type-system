@@ -1,16 +1,16 @@
-﻿using Sample.FinanceSystem.Domain.Types.Common;
-using Sample.FinanceSystem.Domain.Types.CustomerTypes;
+﻿using Sample.FinanceSystem.Domain.Types.CustomerTypes;
 using Sample.FinanceSystem.Domain.Types.InvoiceDetailLineTypes;
 using Sample.FinanceSystem.Domain.Types.InvoiceTypes;
+using static Sample.FinanceSystem.Domain.Types.Common.ErrorMessage;
 using static Sample.FinanceSystem.Domain.Types.PaymentTypes.Payment;
 
 namespace Sample.FinanceSystem.Domain.Types;
 [AsChoice]
-public static partial class Invoice
+public static partial class InvoiceEntity
 {
-    public interface IInvoices { }
+    public interface IInvoiceEntity { }
 
-    public record UnvalidatedInvoice : IInvoices
+    public record UnvalidatedInvoice : IInvoiceEntity
     {
         public DateOnly CreationDate { get; private init; }
         public Customer Customer { get; private init; }
@@ -28,7 +28,7 @@ public static partial class Invoice
         }
     }
 
-    public record CalculatedInvoice : IInvoices
+    public record CalculatedInvoice : IInvoiceEntity
     {
         public DateOnly CreationDate { get; private init; }
         public DateOnly DueDate { get; private init; }
@@ -53,19 +53,19 @@ public static partial class Invoice
         }
     }
 
-    public record InvalidInvoice : IInvoices
+    public record InvalidInvoice : IInvoiceEntity
     {
         public DateOnly CreationDate { get; private init; }
         public Customer Customer { get; private init; }
 
         public IReadOnlyList<DetailLine> Lines { get; private init; }
 
-        public IReadOnlyCollection<ErrorMessage> Errors { get; private init; }
+        public IReadOnlyCollection<ValidationError> Errors { get; private init; }
 
         internal InvalidInvoice(
             Customer customer,
             DateOnly creationDate,
-            IEnumerable<ErrorMessage> errors,
+            IEnumerable<ValidationError> errors,
             IEnumerable<DetailLine> lines)
         {
             Customer = customer;
@@ -75,7 +75,7 @@ public static partial class Invoice
         }
     }
 
-    public record ApprovedInvoice : IInvoices
+    public record ApprovedInvoice : IInvoiceEntity
     {
         public DateOnly CreationDate { get; private init; }
         public DateOnly DueDate { get; private init; }
@@ -103,13 +103,13 @@ public static partial class Invoice
         }
     }
 
-    public record PaidInvoice : IInvoices
+    public record PaidInvoice : IInvoiceEntity
     {
         public DateOnly CreationDate { get; private init; }
         public DateOnly DueDate { get; private init; }
         public Customer Customer { get; private init; }
         public InvoiceApproval Approval { get; set; }
-        
+
         public InvoiceTotal Total { get; private init; }
 
         public IReadOnlyList<DetailLine> Lines { get; private init; }

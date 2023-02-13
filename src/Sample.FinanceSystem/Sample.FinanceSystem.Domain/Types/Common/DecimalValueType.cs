@@ -1,4 +1,5 @@
 ﻿using LanguageExt;
+using static Sample.FinanceSystem.Domain.Types.Common.ErrorMessage;
 
 namespace Sample.FinanceSystem.Domain.Types.Common
 {
@@ -15,8 +16,8 @@ namespace Sample.FinanceSystem.Domain.Types.Common
         public override string ToString() => Value.ToString(Format);
     }
 
-    internal interface IDecimalValueType<T> where T: AbstractDecimalValueType
+    internal interface IDecimalValueType<T> where T : AbstractDecimalValueType
     {
-        public static abstract Either<ErrorMessage, T> Parse(decimal value);
+        public static abstract Either<ValidationError, T> Parse(decimal value);
     }
 }
