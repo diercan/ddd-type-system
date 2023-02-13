@@ -2,30 +2,34 @@
 using static Sample.FinanceSystem.Domain.Types.Common.ErrorMessage;
 
 namespace Sample.FinanceSystem.Domain.Workflows.Common;
-public abstract class Workflow<TEntity, TValidEntity, TUnvalidatedEntity, TInputDto, TContext, TEvent>
-        where TUnvalidatedEntity : TEntity
-        where TValidEntity : TEntity
+public abstract class Workflow<TInputEntity, TContext, TResultEntity, TEvent>
 {
-    protected abstract Either<IErrorMessage, TUnvalidatedEntity> MapDtoToEntity(TInputDto input);
-    protected abstract TryAsync<TContext> TryLoadDbContext(TUnvalidatedEntity entity);
-    protected abstract Either<IErrorMessage, TValidEntity> RunBusinessRules(TUnvalidatedEntity inputEntity, TContext context);
+    protected IRepository<TInputEntity, TContext, TResultEntity> Repository { get; }
+    protected IResultMapper<TResultEntity, TEvent> ResultMapper { get; }
 
-    protected abstract TryAsync<Unit> TrySaveToDb(TValidEntity entity);
+    protected Workflow(
+        IRepository<TInputEntity, TContext, TResultEntity> repository,
+        IResultMapper<TResultEntity, TEvent> resultMapper)
+    {
+        Repository = repository;
+        ResultMapper = resultMapper;
+    }
 
-    protected abstract Task<TEvent> ConvertResultToEvent(EitherAsync<IErrorMessage, TValidEntity> result);
-
-    public Task<TEvent> RunAsync(TInputDto input)
+    public Task<TEvent> RunAsync(TInputEntity input)
     {
         var result =
-            from unvalidatedEntity in MapDtoToEntity(input).ToAsync()
-            from context in TryLoadDbContext(unvalidatedEntity)
+            from context in Repository.TryLoadDbContext(input)
                             .ToEither(ex => new UnexpectedErrorMessage(ex) as IErrorMessage)
-            from validEntity in RunBusinessRules(unvalidatedEntity, context)
+            from validEntity in RunBusinessRules(input, context)
                             .ToAsync()
-            from unit in TrySaveToDb(validEntity)
+            from unit in Repository.TrySaveToDb(validEntity)
                         .ToEither(ex => new UnexpectedErrorMessage(ex) as IErrorMessage)
             select validEntity;
 
-        return ConvertResultToEvent(result);
+        return ResultMapper.ResultToEvent(result);
     }
+
+    protected abstract Either<IErrorMessage, TResultEntity> RunBusinessRules(TInputEntity inputEntity, TContext context);
+
+
 }

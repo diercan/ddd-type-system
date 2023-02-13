@@ -2,6 +2,6 @@
 using static Sample.FinanceSystem.Domain.Types.InvoiceEntity;
 
 namespace Sample.FinanceSystem.Domain.Operations.Common;
-public abstract class InvoiceOperation<TInvoice> : Operation<TInvoice, IInvoiceEntity, InvoiceContext> where TInvoice : IInvoiceEntity
+public abstract class InvoiceOperation<TInvoice> : Operation<TInvoice, IInvoice, InvoiceContext> where TInvoice : IInvoice
 {
 }

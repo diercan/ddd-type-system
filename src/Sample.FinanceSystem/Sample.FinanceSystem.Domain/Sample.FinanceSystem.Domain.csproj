@@ -11,8 +11,4 @@
     <PackageReference Include="LanguageExt.Core" Version="4.4.2" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Sample.FinanceSystem.Api.Models\Sample.FinanceSystem.Api.Models.csproj" />
-  </ItemGroup>
-
 </Project>
