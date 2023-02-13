@@ -1,5 +1,5 @@
 ﻿using LanguageExt;
-using Sample.FinanceSystem.Domain.Types.Common;
+using static Sample.FinanceSystem.Domain.Types.Common.ErrorMessage;
 
 namespace Sample.FinanceSystem.Domain.Types.LedgerCodeTypes
 {
@@ -20,14 +20,14 @@ namespace Sample.FinanceSystem.Domain.Types.LedgerCodeTypes
             ? $"{Code} - {Description}"
             : Code;
 
-        public static Either<ErrorMessage, LedgerCode> Parse(string code, string? description)
+        public static Either<ValidationError, LedgerCode> Parse(string code, string? description)
         {
             if (string.IsNullOrWhiteSpace(code))
-                return new ErrorMessage("Empty string is not a valid ledger code. Ledger codes are 6 digit codes.");
+                return new ValidationError("Empty string is not a valid ledger code. Ledger codes are 6 digit codes.");
             if (code.Length != 6)
-                return new ErrorMessage($"{code} is not a valid ledger code. Ledger codes are 6 digit codes.");
+                return new ValidationError($"{code} is not a valid ledger code. Ledger codes are 6 digit codes.");
             if (!uint.TryParse(code, out _))
-                return new ErrorMessage($"{code} is not a valid ledger code. Ledger codes are 6 digit codes.");
+                return new ValidationError($"{code} is not a valid ledger code. Ledger codes are 6 digit codes.");
 
             int ledgerType = int.Parse(code[..1]);
             return ledgerType switch

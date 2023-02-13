@@ -1,7 +1,7 @@
 ﻿using LanguageExt;
 using Sample.FinanceSystem.Domain.Types.AddressTypes;
-using Sample.FinanceSystem.Domain.Types.Common;
 using Sample.FinanceSystem.Domain.Types.CustomerTypes;
+using static Sample.FinanceSystem.Domain.Types.Common.ErrorMessage;
 
 namespace Sample.FinanceSystem.Domain.Tests.Types.CustomerTypes;
 public class CustomerTests
@@ -10,7 +10,7 @@ public class CustomerTests
     public void CustomerCreatedSuccessfully()
     {
         //arrange
-        Either<ErrorMessage, Address> addressEither = CreateAddress();
+        Either<ValidationError, Address> addressEither = CreateAddress();
 
         var codeEither = Code.Parse("CT500");
         var nameEither = Name.Parse("Access");
@@ -43,7 +43,7 @@ public class CustomerTests
     public void CustomerCreationFailForInvalidData()
     {
         //arrange
-        Either<ErrorMessage, Address> addressEither = CreateAddress();
+        Either<ValidationError, Address> addressEither = CreateAddress();
 
         var codeEither = Code.Parse("CT500");
         var nameEither = Name.Parse("Access");
@@ -63,7 +63,7 @@ public class CustomerTests
         );
     }
 
-    private static Either<ErrorMessage, Address> CreateAddress()
+    private static Either<ValidationError, Address> CreateAddress()
     {
         var cityEither = City.Parse("Timisoara");
         var zipCodeEither = ZipCode.Parse("300000");
