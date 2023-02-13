@@ -1,4 +1,4 @@
-﻿using LanguageExt;
+using LanguageExt;
 using Sample.FinanceSystem.Domain.Types.Common;
 
 namespace Sample.FinanceSystem.Domain.Types.VatTypes;

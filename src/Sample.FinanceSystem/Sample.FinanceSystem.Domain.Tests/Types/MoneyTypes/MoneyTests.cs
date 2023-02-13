@@ -1,4 +1,4 @@
-﻿using Sample.FinanceSystem.Domain.Types.MoneyTypes;
+using Sample.FinanceSystem.Domain.Types.MoneyTypes;
 
 namespace Sample.FinanceSystem.Domain.Tests.Types.MoneyTypes
 {

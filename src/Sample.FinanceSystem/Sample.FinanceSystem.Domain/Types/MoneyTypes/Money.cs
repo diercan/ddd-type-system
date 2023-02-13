@@ -1,4 +1,4 @@
-﻿using LanguageExt;
+using LanguageExt;
 using Sample.FinanceSystem.Domain.Types.Common;
 using System.Globalization;
 
