@@ -1,7 +1,7 @@
 ﻿namespace Sample.FinanceSystem.Domain.Types.Common
 {
     [AsChoice]
-    public static class ErrorMessage
+    public static partial class ErrorMessage
     {
         public interface IErrorMessage { }
 

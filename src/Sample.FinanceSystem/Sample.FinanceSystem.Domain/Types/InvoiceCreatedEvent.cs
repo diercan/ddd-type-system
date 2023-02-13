@@ -1,6 +1,6 @@
 ﻿namespace Sample.FinanceSystem.Domain.Types;
 [AsChoice]
-public static class InvoiceCreatedEvent
+public static partial class InvoiceCreatedEvent
 {
     public interface IInvoiceCreatedEvent { }
     public record InvoiceCreatedSuccessfulyEvent : IInvoiceCreatedEvent { }
