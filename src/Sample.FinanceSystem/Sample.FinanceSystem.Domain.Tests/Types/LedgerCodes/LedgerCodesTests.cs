@@ -1,5 +1,5 @@
 ﻿using LanguageExt;
-using Sample.FinanceSystem.Domain.Types.LedgerCodes;
+using Sample.FinanceSystem.Domain.Types.LedgerCodeTypes;
 
 namespace Sample.FinanceSystem.Domain.Tests.Types.LedgerCodes
 {

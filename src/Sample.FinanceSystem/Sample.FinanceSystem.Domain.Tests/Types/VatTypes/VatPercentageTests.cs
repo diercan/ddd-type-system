@@ -1,8 +1,8 @@
 ﻿using LanguageExt;
 using Sample.FinanceSystem.Domain.Types.Common;
-using Sample.FinanceSystem.Domain.Types.Vat;
+using Sample.FinanceSystem.Domain.Types.VatTypes;
 
-namespace Sample.FinanceSystem.Domain.Tests.Types.Vat
+namespace Sample.FinanceSystem.Domain.Tests.Types.VatTypes
 {
     public class VatPercentageTests
     {

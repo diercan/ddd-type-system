@@ -1,7 +1,7 @@
 ﻿using LanguageExt;
 using Sample.FinanceSystem.Domain.Types.Common;
 
-namespace Sample.FinanceSystem.Domain.Types.LedgerCodes
+namespace Sample.FinanceSystem.Domain.Types.LedgerCodeTypes
 {
     public record AssetLedgerCode : LedgerCode;
     public record LiabilityLedgerCode : LedgerCode;
