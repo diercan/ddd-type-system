@@ -1,6 +1,7 @@
 ﻿using Sample.FinanceSystem.Domain.Types.CustomerTypes;
 using Sample.FinanceSystem.Domain.Types.InvoiceDetailLineTypes;
 using Sample.FinanceSystem.Domain.Types.InvoiceTypes;
+using Sample.FinanceSystem.Domain.Types.MoneyTypes;
 using static Sample.FinanceSystem.Domain.Types.Common.ErrorMessage;
 using static Sample.FinanceSystem.Domain.Types.PaymentTypes.Payment;
 
@@ -14,6 +15,8 @@ public static partial class InvoiceEntity
     {
         public DateOnly CreationDate { get; private init; }
         public Customer Customer { get; private init; }
+
+        public Currency? Currency { get; init; }
 
         public IReadOnlyList<DetailLine> Lines { get; private init; }
 
@@ -34,6 +37,7 @@ public static partial class InvoiceEntity
         public DateOnly DueDate { get; private init; }
         public Customer Customer { get; private init; }
 
+        public Currency Currency { get; private init; }
         public InvoiceTotal Total { get; private init; }
 
         public IReadOnlyList<DetailLine> Lines { get; private init; }
@@ -82,6 +86,7 @@ public static partial class InvoiceEntity
         public Customer Customer { get; private init; }
         public InvoiceApproval Approval { get; set; }
 
+        public Currency Currency { get; private init; }
         public InvoiceTotal Total { get; private init; }
 
         public IReadOnlyList<DetailLine> Lines { get; private init; }
@@ -110,6 +115,7 @@ public static partial class InvoiceEntity
         public Customer Customer { get; private init; }
         public InvoiceApproval Approval { get; set; }
 
+        public Currency Currency { get; private init; }
         public InvoiceTotal Total { get; private init; }
 
         public IReadOnlyList<DetailLine> Lines { get; private init; }

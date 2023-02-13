@@ -1,4 +1,5 @@
 ﻿using LanguageExt;
+using Sample.FinanceSystem.Domain.Types.Common;
 using static Sample.FinanceSystem.Domain.Types.Common.ErrorMessage;
 
 namespace Sample.FinanceSystem.Domain.Types.LedgerCodeTypes
@@ -11,6 +12,7 @@ namespace Sample.FinanceSystem.Domain.Types.LedgerCodeTypes
     public record TransfersLedgerCode : LedgerCode;
     public record CustomLedgerCode : LedgerCode;
 
+    // Todo: Inherit AbstractStringValueType and use Value instead of Code.
     public abstract record LedgerCode
     {
         public string Code { get; private set; } = default!;
