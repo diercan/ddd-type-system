@@ -24,13 +24,18 @@ public class CreateInvoiceWorkflow : Workflow<IInvoiceEntity, InvoiceDto, Invoic
     protected override Either<IErrorMessage, CalculatedInvoice> RunBusinessRules<CalculatedInvoice, UnvalidatedInvoice>(UnvalidatedInvoice inputEntity, InvoiceContext context)
     {
         // The generic here is only of type IInvoiceEntity, not the more specific UnvalidatedInvoice.
-        InvoiceEntity.UnvalidatedInvoice unvalidatedInvoice = inputEntity as InvoiceEntity.UnvalidatedInvoice;
 
-        var result = from dueDate in Try(() => new CalculateDueDateOperation().Run(unvalidatedInvoice, context))
-                         // dueDate here is still an invoice, not just the due date.
-                         // What if each operation creates another instance of the UnvalidatedInvoice that is passed to the following operation?
-                         // What if CalculatedInvoice and UnvalidatedInvoice would have the same fields, with the difference that the Calculated one is also validated?
-                     select dueDate;
+        // If all operations would return a Either<ValidationError, UnvalidatedInvoice> calling them here would be straight forward.
+        var result = from withDueDate in Try(() => new CalculateDueDateOperation().Run(inputEntity as InvoiceEntity.UnvalidatedInvoice, context))
+                         // withDueDate here is still an invoice, not just the due date.
+                         // If each operation creates another instance of the UnvalidatedInvoice that is passed to the following operation
+                         // we could chain all calculate and validate operations here.
+                     from withCurrency in Try(() => new CalculateDefaultCurrencyOperation().Run(withDueDate as InvoiceEntity.UnvalidatedInvoice, context))
+                     from withVatPercentage in Try(() => new CalculateVatPercentage().Run(withCurrency as InvoiceEntity.UnvalidatedInvoice, context))
+                     from withDetailLines in Try(() => new CalculateVatPercentage().Run(withVatPercentage as InvoiceEntity.UnvalidatedInvoice, context))
+                     from withTotalInvoice in Try(() => new CalculateVatPercentage().Run(withDetailLines as InvoiceEntity.UnvalidatedInvoice, context))
+
+                     select withTotalInvoice;
 
         throw new NotImplementedException();
     }
