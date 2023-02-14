@@ -6,7 +6,7 @@ namespace Sample.FinanceSystem.Domain.Operations.Calculations;
 
 internal class CalculateDefaultCurrencyOperation : InvoiceOperation<UnvalidatedInvoice>
 {
-    public override IInvoiceEntity Run(UnvalidatedInvoice input, InvoiceContext context)
+    public override IInvoice Run(UnvalidatedInvoice input, InvoiceContext context)
     {
         return input switch
         {

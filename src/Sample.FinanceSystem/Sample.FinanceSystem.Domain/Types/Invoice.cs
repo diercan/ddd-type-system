@@ -9,9 +9,9 @@ namespace Sample.FinanceSystem.Domain.Types;
 [AsChoice]
 public static partial class InvoiceEntity
 {
-    public interface IInvoiceEntity { }
+    public interface IInvoice { }
 
-    public record UnvalidatedInvoice : IInvoiceEntity
+    public record UnvalidatedInvoice : IInvoice
     {
         public DateOnly CreationDate { get; private init; }
         public Customer Customer { get; private init; }
@@ -31,7 +31,7 @@ public static partial class InvoiceEntity
         }
     }
 
-    public record CalculatedInvoice : IInvoiceEntity
+    public record CalculatedInvoice : IInvoice
     {
         public DateOnly CreationDate { get; private init; }
         public DateOnly DueDate { get; private init; }
@@ -57,7 +57,7 @@ public static partial class InvoiceEntity
         }
     }
 
-    public record InvalidInvoice : IInvoiceEntity
+    public record InvalidInvoice : IInvoice
     {
         public DateOnly CreationDate { get; private init; }
         public Customer Customer { get; private init; }
@@ -79,7 +79,7 @@ public static partial class InvoiceEntity
         }
     }
 
-    public record ApprovedInvoice : IInvoiceEntity
+    public record ApprovedInvoice : IInvoice
     {
         public DateOnly CreationDate { get; private init; }
         public DateOnly DueDate { get; private init; }
@@ -108,7 +108,7 @@ public static partial class InvoiceEntity
         }
     }
 
-    public record PaidInvoice : IInvoiceEntity
+    public record PaidInvoice : IInvoice
     {
         public DateOnly CreationDate { get; private init; }
         public DateOnly DueDate { get; private init; }
