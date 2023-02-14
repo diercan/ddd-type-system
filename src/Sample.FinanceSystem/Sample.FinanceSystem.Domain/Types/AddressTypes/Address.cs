@@ -3,8 +3,7 @@ public record Address(
     City City,
     ZipCode ZipCode,
     AddressLine AddressLine1,
-    AddressLine? AddressLine2
-)
+    AddressLine? AddressLine2)
 {
     public Address(
         City City,

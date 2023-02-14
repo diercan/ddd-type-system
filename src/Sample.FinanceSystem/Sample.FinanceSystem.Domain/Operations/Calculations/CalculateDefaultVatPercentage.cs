@@ -4,7 +4,7 @@ using static Sample.FinanceSystem.Domain.Types.InvoiceEntity;
 
 namespace Sample.FinanceSystem.Domain.Operations.Calculations;
 
-internal class CalculateVatPercentage : InvoiceOperation<UnvalidatedInvoice>
+internal class CalculateDefaultVatPercentage : InvoiceOperation<UnvalidatedInvoice>
 {
     public override IInvoice Run(UnvalidatedInvoice input, InvoiceContext context)
     {

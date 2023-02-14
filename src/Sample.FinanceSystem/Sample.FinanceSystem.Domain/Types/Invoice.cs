@@ -13,21 +13,30 @@ public static partial class InvoiceEntity
 
     public record UnvalidatedInvoice : IInvoice
     {
-        public DateOnly CreationDate { get; private init; }
-        public Customer Customer { get; private init; }
+        public DateOnly? CreationDate { get; init; }
+        public DateOnly? DueDate { get; init; }
+        public Customer? Customer { get; init; }
 
         public Currency? Currency { get; init; }
+        public InvoiceTotal? Total { get; init; }
 
-        public IReadOnlyList<DetailLine> Lines { get; private init; }
+        public IReadOnlyList<DetailLine>? Lines { get; init; }
 
         internal UnvalidatedInvoice(
-            Customer customer,
-            DateOnly creationDate,
-            IEnumerable<DetailLine> lines)
+            DateOnly? creationDate,
+            Customer? customer,
+            DateOnly? dueDate,
+            Currency? currency,
+            InvoiceTotal? total,
+            IEnumerable<DetailLine>? lines)
         {
-            Customer = customer;
             CreationDate = creationDate;
-            Lines = lines.ToList().AsReadOnly();
+            DueDate = dueDate;
+            Customer = customer;
+            Currency = currency;
+            CreationDate = creationDate;
+            Total = total;
+            Lines = lines?.ToList().AsReadOnly();
         }
     }
 
@@ -59,22 +68,22 @@ public static partial class InvoiceEntity
 
     public record InvalidInvoice : IInvoice
     {
-        public DateOnly CreationDate { get; private init; }
-        public Customer Customer { get; private init; }
+        public DateOnly? CreationDate { get; private init; }
+        public Customer? Customer { get; private init; }
 
-        public IReadOnlyList<DetailLine> Lines { get; private init; }
+        public IReadOnlyList<DetailLine>? Lines { get; private init; }
 
         public IReadOnlyCollection<ValidationError> Errors { get; private init; }
 
         internal InvalidInvoice(
-            Customer customer,
-            DateOnly creationDate,
+            Customer? customer,
+            DateOnly? creationDate,
             IEnumerable<ValidationError> errors,
-            IEnumerable<DetailLine> lines)
+            IEnumerable<DetailLine>? lines)
         {
             Customer = customer;
             CreationDate = creationDate;
-            Lines = lines.ToList().AsReadOnly();
+            Lines = lines?.ToList().AsReadOnly();
             Errors = errors.ToList().AsReadOnly();
         }
     }
