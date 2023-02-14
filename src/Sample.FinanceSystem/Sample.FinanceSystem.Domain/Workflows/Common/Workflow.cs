@@ -2,35 +2,34 @@
 using static Sample.FinanceSystem.Domain.Types.Common.ErrorMessage;
 
 namespace Sample.FinanceSystem.Domain.Workflows.Common;
-public abstract class Workflow<TEntity, TInputDto, TContext, TEvent>
+public abstract class Workflow<TInputEntity, TContext, TResultEntity, TEvent>
 {
-    protected abstract Either<IErrorMessage, TUnvalidatedEntity> MapDtoToEntity<TUnvalidatedEntity>(TInputDto input)
-        where TUnvalidatedEntity : TEntity;
-    protected abstract TryAsync<TContext> TryLoadDbContext<TUnvalidatedEntity>(TUnvalidatedEntity entity)
-        where TUnvalidatedEntity : TEntity;
-    protected abstract Either<IErrorMessage, TValidEntity> RunBusinessRules<TValidEntity, TUnvalidatedEntity>(TUnvalidatedEntity inputEntity, TContext context)
-        where TUnvalidatedEntity : TEntity
-        where TValidEntity : TEntity;
-    protected abstract TryAsync<Unit> TrySaveToDb<TValidEntity>(TValidEntity entity)
-        where TValidEntity : TEntity;
+    protected IRepository<TInputEntity, TContext, TResultEntity> Repository { get; }
+    protected IResultMapper<TResultEntity, TEvent> ResultMapper { get; }
 
-    protected abstract Task<TEvent> ConvertResultToEvent<TValidEntity>(EitherAsync<IErrorMessage, TValidEntity> result)
-        where TValidEntity : TEntity;
+    protected Workflow(
+        IRepository<TInputEntity, TContext, TResultEntity> repository,
+        IResultMapper<TResultEntity, TEvent> resultMapper)
+    {
+        Repository = repository;
+        ResultMapper = resultMapper;
+    }
 
-    public Task<TEvent> RunAsync<TValidEntity, TUnvalidatedEntity>(TInputDto input)
-        where TUnvalidatedEntity : TEntity
-        where TValidEntity : TEntity
+    public Task<TEvent> RunAsync(TInputEntity input)
     {
         var result =
-            from unvalidatedEntity in MapDtoToEntity<TUnvalidatedEntity>(input).ToAsync()
-            from context in TryLoadDbContext(unvalidatedEntity)
+            from context in Repository.TryLoadDbContext(input)
                             .ToEither(ex => new UnexpectedErrorMessage(ex) as IErrorMessage)
-            from validEntity in RunBusinessRules<TValidEntity, TUnvalidatedEntity>(unvalidatedEntity, context)
+            from validEntity in RunBusinessRules(input, context)
                             .ToAsync()
-            from unit in TrySaveToDb(validEntity)
+            from unit in Repository.TrySaveToDb(validEntity)
                         .ToEither(ex => new UnexpectedErrorMessage(ex) as IErrorMessage)
             select validEntity;
 
-        return ConvertResultToEvent(result);
+        return ResultMapper.ResultToEvent(result);
     }
+
+    protected abstract Either<IErrorMessage, TResultEntity> RunBusinessRules(TInputEntity inputEntity, TContext context);
+
+
 }
