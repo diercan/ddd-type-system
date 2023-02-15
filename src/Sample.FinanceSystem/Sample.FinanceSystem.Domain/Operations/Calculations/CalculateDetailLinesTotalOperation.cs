@@ -1,4 +1,5 @@
-﻿using Sample.FinanceSystem.Domain.Operations.Common;
+﻿using LanguageExt;
+using Sample.FinanceSystem.Domain.Operations.Common;
 using Sample.FinanceSystem.Domain.Types;
 using Sample.FinanceSystem.Domain.Types.DetailLineTypes;
 using Sample.FinanceSystem.Domain.Types.InvoiceDetailLineTypes;
@@ -9,9 +10,9 @@ using static Sample.FinanceSystem.Domain.Types.InvoiceEntity;
 
 namespace Sample.FinanceSystem.Domain.Operations.Calculations;
 
-internal class CalculateDetailLinesTotalOperation : InvoiceOperation<UnvalidatedInvoice>
+internal class CalculateDetailLinesTotalOperation : InvoiceOperation2<UnvalidatedInvoice>
 {
-    public override IInvoice Run(UnvalidatedInvoice input, InvoiceContext context)
+    protected override EitherAsync<IErrorMessage, IInvoice> Run(UnvalidatedInvoice input, InvoiceContext context)
     {
         return input switch
         {
@@ -19,24 +20,20 @@ internal class CalculateDetailLinesTotalOperation : InvoiceOperation<Unvalidated
                 input.Customer,
                 input.CreationDate,
                 input.Lines.Select(l => CalculateDetailLine(l, input.Currency.Value))),
-            _ => new InvalidInvoice(
-                input.Customer,
-                input.CreationDate,
-                new[] { new ValidationError("Currency is not set", nameof(UnvalidatedInvoice.Currency)) },
-                input.Lines)
+            _ => new ValidationError("Currency is not set", nameof(UnvalidatedInvoice.Currency))
         };
     }
 
     private static DetailLine CalculateDetailLine(DetailLine invoiceLine, Currency currency)
-        => invoiceLine with
+    => invoiceLine with
+    {
+        Total = invoiceLine.Total switch
         {
-            Total = invoiceLine.Total switch
-            {
-                { Gross.Value: not 0 } => CalculateByGrossEntry(invoiceLine.Total, invoiceLine.Vat.Percentage),
-                { Net.Value: not 0 } => CalculateByNetEntry(invoiceLine.Total, invoiceLine.Vat.Percentage),
-                _ => new DetailLineTotal(new Money(0, currency), new Money(0, currency), new Money(0, currency))
-            }
-        };
+            { Gross.Value: not 0 } => CalculateByGrossEntry(invoiceLine.Total, invoiceLine.Vat.Percentage),
+            { Net.Value: not 0 } => CalculateByNetEntry(invoiceLine.Total, invoiceLine.Vat.Percentage),
+            _ => new DetailLineTotal(new Money(0, currency), new Money(0, currency), new Money(0, currency))
+        }
+    };
 
     private static DetailLineTotal CalculateByGrossEntry(DetailLineTotal total, VatPercentage percentage)
     {

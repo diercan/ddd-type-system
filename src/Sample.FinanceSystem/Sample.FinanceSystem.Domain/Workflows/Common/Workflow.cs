@@ -21,7 +21,6 @@ public abstract class Workflow<TInputEntity, TContext, TResultEntity, TEvent>
             from context in Repository.TryLoadDbContext(input)
                             .ToEither(ex => new UnexpectedErrorMessage(ex) as IErrorMessage)
             from validEntity in RunBusinessRules(input, context)
-                            .ToAsync()
             from unit in Repository.TrySaveToDb(validEntity)
                         .ToEither(ex => new UnexpectedErrorMessage(ex) as IErrorMessage)
             select validEntity;
@@ -29,7 +28,7 @@ public abstract class Workflow<TInputEntity, TContext, TResultEntity, TEvent>
         return ResultMapper.ResultToEvent(result);
     }
 
-    protected abstract Either<IErrorMessage, TResultEntity> RunBusinessRules(TInputEntity inputEntity, TContext context);
+    protected abstract EitherAsync<IErrorMessage, TResultEntity> RunBusinessRules(TInputEntity inputEntity, TContext context);
 
 
 }

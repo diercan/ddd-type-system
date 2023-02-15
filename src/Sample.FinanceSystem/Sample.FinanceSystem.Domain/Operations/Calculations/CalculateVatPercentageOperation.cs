@@ -6,7 +6,7 @@ using static Sample.FinanceSystem.Domain.Types.InvoiceEntity;
 
 namespace Sample.FinanceSystem.Domain.Operations.Calculations;
 
-internal class CalculateInvoiceTotalOperation : InvoiceOperation2<UnvalidatedInvoice>
+internal class CalculateVatPercentageOperation : InvoiceOperation2<UnvalidatedInvoice>
 {
     protected override EitherAsync<ErrorMessage.IErrorMessage, IInvoice> Run(UnvalidatedInvoice input, InvoiceContext context)
     {

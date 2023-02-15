@@ -11,25 +11,11 @@ public static partial class InvoiceEntity
 {
     public interface IInvoice { }
 
-    public record UnvalidatedInvoice : IInvoice
-    {
-        public DateOnly CreationDate { get; private init; }
-        public Customer Customer { get; private init; }
+    public record InvoiceRequest(DateOnly? CreationDate, string? CustomerCode, Currency? Currency, IReadOnlyList<DetailLine>? Lines) : IInvoice;
 
-        public Currency? Currency { get; init; }
+    public record UnvalidatedInvoice(DateOnly? CreationDate, Customer? Customer, Currency? Currency, IReadOnlyList<DetailLine>? Lines) : IInvoice;
 
-        public IReadOnlyList<DetailLine> Lines { get; private init; }
-
-        internal UnvalidatedInvoice(
-            Customer customer,
-            DateOnly creationDate,
-            IEnumerable<DetailLine> lines)
-        {
-            Customer = customer;
-            CreationDate = creationDate;
-            Lines = lines.ToList().AsReadOnly();
-        }
-    }
+    public record ValidatedInvoice(DateOnly CreationDate, Customer Customer, Currency Currency, IReadOnlyList<DetailLine> Lines) : IInvoice;
 
     public record CalculatedInvoice : IInvoice
     {

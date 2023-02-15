@@ -5,3 +5,7 @@ namespace Sample.FinanceSystem.Domain.Operations.Common;
 public abstract class InvoiceOperation<TInvoice> : Operation<TInvoice, IInvoice, InvoiceContext> where TInvoice : IInvoice
 {
 }
+
+public abstract class InvoiceOperation2<TInvoice> : Operation2<TInvoice, IInvoice, InvoiceContext> where TInvoice : IInvoice
+{
+}
