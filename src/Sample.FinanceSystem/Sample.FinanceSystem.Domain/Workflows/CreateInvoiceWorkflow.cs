@@ -1,4 +1,5 @@
 ﻿using LanguageExt;
+using Sample.FinanceSystem.Domain.Operations;
 using Sample.FinanceSystem.Domain.Operations.Calculations;
 using Sample.FinanceSystem.Domain.Operations.Common;
 using Sample.FinanceSystem.Domain.Operations.Validations;
@@ -18,9 +19,9 @@ public class CreateInvoiceWorkflow : Workflow<UnvalidatedInvoice, InvoiceContext
     protected override Either<IErrorMessage, CalculatedInvoice> RunBusinessRules(UnvalidatedInvoice inputEntity, InvoiceContext context)
     {
         IInvoice calculatedInvoice = inputEntity
-            .RunIfMatch(context, new ValidatePreCalculationOperation())
-            .RunIfMatch(context, new CalculateDefaultCurrencyOperation())
-            .RunIfMatch(context, new CalculateDefaultVatPercentage())
+            .RunIfUnvalidatedInvoice<ValidatePreCalculationOperation>(context)
+            .RunIfUnvalidatedInvoice<CalculateDefaultCurrencyOperation>(context)
+            .RunIfUnvalidatedInvoice<CalculateDefaultVatPercentage>(context)
             .RunIfMatch(context, new ValidateDefaultsOperation())
             .RunIfMatch(context, new CalculateDueDateOperation())
             .RunIfMatch(context, new CalculateDetailLinesTotalOperation())
