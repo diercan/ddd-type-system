@@ -16,8 +16,11 @@ internal class CalculateDetailLinesTotalOperation : InvoiceOperation<Unvalidated
         return input switch
         {
             { Currency: not null } => new UnvalidatedInvoice(
-                input.Customer,
                 input.CreationDate,
+                input.Customer,
+                null,
+                null,
+                null,
                 input.Lines.Select(l => CalculateDetailLine(l, input.Currency.Value))),
             _ => new InvalidInvoice(
                 input.Customer,

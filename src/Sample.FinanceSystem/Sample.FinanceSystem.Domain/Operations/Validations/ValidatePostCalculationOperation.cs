@@ -14,6 +14,6 @@ internal class ValidatePostCalculationOperation : InvoiceOperation<UnvalidatedIn
 
         return errors.Any()
             ? new InvalidInvoice(input.Customer, input.CreationDate, errors, input.Lines)
-            : new CalculatedInvoice(input.Customer, input.CreationDate, input.DueDate.Value, input.Total, input.Lines);
+            : new CalculatedInvoice(input.Customer, input.CreationDate.Value, input.DueDate.Value, input.Total, input.Lines);
     }
 }
