@@ -10,18 +10,19 @@ using static Sample.FinanceSystem.Domain.Types.InvoiceEntity;
 
 namespace Sample.FinanceSystem.Domain.Operations.Calculations;
 
-internal class CalculateDetailLinesTotalOperation : InvoiceOperation2<UnvalidatedInvoice>
+internal class CalculateDetailLinesTotalOperation : InvoiceOperation<UnvalidatedInvoice, UnvalidatedInvoice>
 {
-    protected override EitherAsync<IErrorMessage, IInvoice> Run(UnvalidatedInvoice input, InvoiceContext context)
+    public override EitherAsync<IErrorMessage, UnvalidatedInvoice> Run(UnvalidatedInvoice input, InvoiceContext context)
     {
-        return input switch
-        {
-            { Currency: not null } => new UnvalidatedInvoice(
-                input.Customer,
-                input.CreationDate,
-                input.Lines.Select(l => CalculateDetailLine(l, input.Currency.Value))),
-            _ => new ValidationError("Currency is not set", nameof(UnvalidatedInvoice.Currency))
-        };
+        throw new NotImplementedException();
+        //return input switch
+        //{
+        //    { Currency: not null } => new UnvalidatedInvoice(
+        //        input.Customer,
+        //        input.CreationDate,
+        //        input.Lines.Select(l => CalculateDetailLine(l, input.Currency.Value))),
+        //    _ => new ValidationError("Currency is not set", nameof(UnvalidatedInvoice.Currency))
+        //};
     }
 
     private static DetailLine CalculateDetailLine(DetailLine invoiceLine, Currency currency)

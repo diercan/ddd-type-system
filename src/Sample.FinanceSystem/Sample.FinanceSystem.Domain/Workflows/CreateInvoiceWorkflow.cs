@@ -8,54 +8,45 @@ using static Sample.FinanceSystem.Domain.Types.InvoiceCreatedEvent;
 using static Sample.FinanceSystem.Domain.Types.InvoiceEntity;
 
 namespace Sample.FinanceSystem.Domain.Workflows;
-public class CreateInvoiceWorkflow : Workflow<UnvalidatedInvoice, InvoiceContext, CalculatedInvoice, IInvoiceCreatedEvent>
+public class CreateInvoiceWorkflow : Workflow<UnvalidatedInvoice, InvoiceContext, ValidatedInvoice, IInvoiceCreatedEvent>
 {
     public CreateInvoiceWorkflow(
-        IRepository<UnvalidatedInvoice, InvoiceContext, CalculatedInvoice> repository,
-        IResultMapper<CalculatedInvoice, IInvoiceCreatedEvent> resultMapper) : base(repository, resultMapper) { }
+        IRepository<UnvalidatedInvoice, InvoiceContext, ValidatedInvoice> repository,
+        IResultMapper<ValidatedInvoice, IInvoiceCreatedEvent> resultMapper) : base(repository, resultMapper) { }
 
-    protected override EitherAsync<IErrorMessage, CalculatedInvoice> RunBusinessRules(UnvalidatedInvoice inputEntity, InvoiceContext context)
+    protected override EitherAsync<IErrorMessage, ValidatedInvoice> RunBusinessRules(UnvalidatedInvoice inputEntity, InvoiceContext context)
+        => from invoiceWithDefaults in CalculateInvoiceDefaults(inputEntity, context)
+           from validInvoice in ValidateInvoice(invoiceWithDefaults, context)
+           from calculatedInvoice in CalculateInvoiceTotals(validInvoice, context)
+           select calculatedInvoice;
+
+    private static EitherAsync<IErrorMessage, UnvalidatedInvoice> ValidateInvoice(UnvalidatedInvoice invoice, InvoiceContext context)
+        => new ValidateInvoiceOperation().Run(invoice, context);
+    private static EitherAsync<IErrorMessage, UnvalidatedInvoice> CalculateInvoiceDefaults(UnvalidatedInvoice invoice, InvoiceContext context)
+        => new CalculateInvoiceDefaultsOperation().Run(invoice, context);
+    private static EitherAsync<IErrorMessage, ValidatedInvoice> CalculateInvoiceTotals(UnvalidatedInvoice invoice, InvoiceContext context)
+        => new CalculateInvoiceTotalsOperation().Run(invoice, context);
+
+
+    protected static EitherAsync<IErrorMessage, ValidatedInvoice> RunBusinessRules_2(UnvalidatedInvoice inputEntity, InvoiceContext context)
         => from invoiceWithDueDate in CalculateDueDate(inputEntity, context)
            from invoiceWithCurrency in CalculateDefaultCurrency(invoiceWithDueDate, context)
            from invoiceWithVatPercentage in CalculateVatPercentage(invoiceWithCurrency, context)
            from invoiceWithDetailLines in CalculateDetailLinesTotal(invoiceWithVatPercentage, context)
            from invoiceWithTotal in CalculateInvoiceTotal(invoiceWithDetailLines, context)
-           from calculatedInvoice in AsCalculatedInvoice(invoiceWithTotal)
+           from calculatedInvoice in ValidateCalculatedInvoice(invoiceWithTotal, context)
            select calculatedInvoice;
 
-    protected static EitherAsync<IErrorMessage, CalculatedInvoice> RunBusinessRules2(UnvalidatedInvoice inputEntity, InvoiceContext context)
-        => from validInvoiceWithDefaults in CalculateInvoiceDefaults(inputEntity, context)          // FROM InvoiceRequest -> UnvalidatedInvoice
-           from validInvoice in ValidateInvoice(validInvoiceWithDefaults, context)                  // FROM UnvalidatedInvoice -> ValidatedInvoice
-           from calculatedInvoice in CalculateInvoiceTotals(validInvoiceWithDefaults, context)      // FROM ValidatedInvoice -> CalculatedInvoice
-           from ofCalculatedType in AsCalculatedInvoice(calculatedInvoice)                          // If operations have input\output type we don't need this.
-           select ofCalculatedType;
-
-    private static EitherAsync<IErrorMessage, IInvoice> ValidateInvoice(IInvoice invoice, InvoiceContext context)
-        => new ValidateInvoiceOperation().Run(invoice, context);
-    private static EitherAsync<IErrorMessage, IInvoice> CalculateInvoiceDefaults(IInvoice invoice, InvoiceContext context)
-        => new CalculateInvoiceDefaultsOperation().Run(invoice, context);
-    private static EitherAsync<IErrorMessage, IInvoice> CalculateInvoiceTotals(IInvoice invoice, InvoiceContext context)
-    => new CalculateInvoiceTotalsOperation().Run(invoice, context);
-
-    private static EitherAsync<IErrorMessage, IInvoice> CalculateDueDate(IInvoice invoice, InvoiceContext context)
-        => new CalculateDueDateOperation().Run(invoice, context);
-
-    private static EitherAsync<IErrorMessage, IInvoice> CalculateDefaultCurrency(IInvoice invoice, InvoiceContext context)
+    private static EitherAsync<IErrorMessage, UnvalidatedInvoice> CalculateDueDate(UnvalidatedInvoice invoice, InvoiceContext context)
+    => new CalculateDueDateOperation().Run(invoice, context);
+    private static EitherAsync<IErrorMessage, UnvalidatedInvoice> CalculateDefaultCurrency(UnvalidatedInvoice invoice, InvoiceContext context)
         => new CalculateDefaultCurrencyOperation().Run(invoice, context);
-
-    private static EitherAsync<IErrorMessage, IInvoice> CalculateVatPercentage(IInvoice invoice, InvoiceContext context)
+    private static EitherAsync<IErrorMessage, UnvalidatedInvoice> CalculateVatPercentage(UnvalidatedInvoice invoice, InvoiceContext context)
         => new CalculateVatPercentageOperation().Run(invoice, context);
-
-    private static EitherAsync<IErrorMessage, IInvoice> CalculateDetailLinesTotal(IInvoice invoice, InvoiceContext context)
+    private static EitherAsync<IErrorMessage, UnvalidatedInvoice> CalculateDetailLinesTotal(UnvalidatedInvoice invoice, InvoiceContext context)
         => new CalculateDetailLinesTotalOperation().Run(invoice, context);
-
-    private static EitherAsync<IErrorMessage, IInvoice> CalculateInvoiceTotal(IInvoice invoice, InvoiceContext context)
+    private static EitherAsync<IErrorMessage, UnvalidatedInvoice> CalculateInvoiceTotal(UnvalidatedInvoice invoice, InvoiceContext context)
         => new CalculateInvoiceTotalOperation().Run(invoice, context);
-
-    private static EitherAsync<IErrorMessage, CalculatedInvoice> AsCalculatedInvoice(IInvoice invoice)
-        => invoice switch
-        {
-            CalculatedInvoice calculatedInvoice => calculatedInvoice,
-            _ => new UnexpectedErrorMessage($"Expected {nameof(CalculatedInvoice)} but received {invoice.GetType().Name}")
-        };
+    private static EitherAsync<IErrorMessage, ValidatedInvoice> ValidateCalculatedInvoice(UnvalidatedInvoice invoice, InvoiceContext context)
+        => new ValidateCalculatedInvoiceOperation().Run(invoice, context);
 }

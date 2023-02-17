@@ -7,9 +7,9 @@ using static Sample.FinanceSystem.Domain.Types.InvoiceEntity;
 
 namespace Sample.FinanceSystem.Domain.Operations.Validations
 {
-    internal class ValidateInvoiceOperation : InvoiceOperation2<UnvalidatedInvoice>
+    internal class ValidateInvoiceOperation : InvoiceOperation<UnvalidatedInvoice, UnvalidatedInvoice>
     {
-        protected override EitherAsync<IErrorMessage, IInvoice> Run(UnvalidatedInvoice input, InvoiceContext context)
+        public override EitherAsync<IErrorMessage, UnvalidatedInvoice> Run(UnvalidatedInvoice input, InvoiceContext context)
         {
             IEnumerable<ValidationError> errors = ValidateDefaults(input).ToImmutableList();
 

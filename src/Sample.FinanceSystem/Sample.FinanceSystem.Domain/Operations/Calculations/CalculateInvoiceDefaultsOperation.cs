@@ -6,9 +6,9 @@ using static Sample.FinanceSystem.Domain.Types.InvoiceEntity;
 
 namespace Sample.FinanceSystem.Domain.Operations.Calculations
 {
-    internal class CalculateInvoiceDefaultsOperation : InvoiceOperation2<UnvalidatedInvoice>
+    internal class CalculateInvoiceDefaultsOperation : InvoiceOperation<UnvalidatedInvoice, UnvalidatedInvoice>
     {
-        protected override EitherAsync<IErrorMessage, IInvoice> Run(UnvalidatedInvoice input, InvoiceContext context)
+        public override EitherAsync<IErrorMessage, UnvalidatedInvoice> Run(UnvalidatedInvoice input, InvoiceContext context)
         {
             // Todo: Aggregates all calculate default operations
             throw new NotImplementedException();

@@ -5,9 +5,9 @@ using static Sample.FinanceSystem.Domain.Types.Common.ErrorMessage;
 using static Sample.FinanceSystem.Domain.Types.InvoiceEntity;
 
 namespace Sample.FinanceSystem.Domain.Operations.Calculations;
-internal class CalculateDueDateOperation : InvoiceOperation2<UnvalidatedInvoice>
+internal class CalculateDueDateOperation : InvoiceOperation<UnvalidatedInvoice, UnvalidatedInvoice>
 {
-    protected override EitherAsync<IErrorMessage, IInvoice> Run(UnvalidatedInvoice input, InvoiceContext context)
+    public override EitherAsync<IErrorMessage, UnvalidatedInvoice> Run(UnvalidatedInvoice input, InvoiceContext context)
     {
         throw new NotImplementedException();
     }

@@ -5,5 +5,10 @@ public record Customer(
     Name Name,
     Code Code,
     VatRegistrationNumber VatRegistrationNumber,
-    Address Address
-);
+    Address Address);
+
+public record UnvalidatedCustomer(
+    string? Name,
+    string? Code,
+    string? VatRegistrationNumber,
+    UnvalidatedAddress Address);

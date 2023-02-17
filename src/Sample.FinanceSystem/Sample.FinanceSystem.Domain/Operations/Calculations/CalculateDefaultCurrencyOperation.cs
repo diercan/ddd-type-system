@@ -6,9 +6,9 @@ using static Sample.FinanceSystem.Domain.Types.InvoiceEntity;
 
 namespace Sample.FinanceSystem.Domain.Operations.Calculations;
 
-internal class CalculateDefaultCurrencyOperation : InvoiceOperation2<UnvalidatedInvoice>
+internal class CalculateDefaultCurrencyOperation : InvoiceOperation<UnvalidatedInvoice, UnvalidatedInvoice>
 {
-    protected override EitherAsync<ErrorMessage.IErrorMessage, IInvoice> Run(UnvalidatedInvoice input, InvoiceContext context)
+    public override EitherAsync<ErrorMessage.IErrorMessage, UnvalidatedInvoice> Run(UnvalidatedInvoice input, InvoiceContext context)
     {
         return input switch
         {

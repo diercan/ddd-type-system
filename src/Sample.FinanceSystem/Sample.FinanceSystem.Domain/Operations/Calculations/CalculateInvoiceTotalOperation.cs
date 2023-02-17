@@ -6,9 +6,9 @@ using static Sample.FinanceSystem.Domain.Types.InvoiceEntity;
 
 namespace Sample.FinanceSystem.Domain.Operations.Calculations;
 
-internal class CalculateInvoiceTotalOperation : InvoiceOperation2<UnvalidatedInvoice>
+internal class CalculateInvoiceTotalOperation : InvoiceOperation<UnvalidatedInvoice, UnvalidatedInvoice>
 {
-    protected override EitherAsync<ErrorMessage.IErrorMessage, IInvoice> Run(UnvalidatedInvoice input, InvoiceContext context)
+    public override EitherAsync<ErrorMessage.IErrorMessage, UnvalidatedInvoice> Run(UnvalidatedInvoice input, InvoiceContext context)
     {
         throw new NotImplementedException();
     }
