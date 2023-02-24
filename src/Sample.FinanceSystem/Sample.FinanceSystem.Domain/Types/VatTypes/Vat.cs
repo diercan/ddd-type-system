@@ -5,5 +5,5 @@ public record Vat(
     VatPercentage Percentage);
 
 public record UnvalidatedVat(
-    string? Code = null,
+    string Code,
     decimal? Percentage = null);

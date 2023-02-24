@@ -1,19 +1,29 @@
 ﻿using LanguageExt;
 using Sample.FinanceSystem.Domain.Operations.Common;
 using Sample.FinanceSystem.Domain.Types;
-using Sample.FinanceSystem.Domain.Types.Common;
+using Sample.FinanceSystem.Domain.Types.MoneyTypes;
+using static Sample.FinanceSystem.Domain.Types.Common.ErrorMessage;
 using static Sample.FinanceSystem.Domain.Types.InvoiceEntity;
 
 namespace Sample.FinanceSystem.Domain.Operations.Calculations;
 
 internal class CalculateDefaultCurrencyOperation : InvoiceOperation<UnvalidatedInvoice, UnvalidatedInvoice>
 {
-    public override EitherAsync<ErrorMessage.IErrorMessage, UnvalidatedInvoice> Run(UnvalidatedInvoice input, InvoiceContext context)
+    public bool ValidateCurrency { get; init; } = false;
+
+    public override EitherAsync<IErrorMessage, UnvalidatedInvoice> Run(UnvalidatedInvoice input, InvoiceContext context)
     {
-        return input switch
-        {
-            { Currency: not null } => input,
-            _ => input with { Currency = context.CustomerCurrency }
-        };
+        if (input.Currency != null)
+            return input;
+
+        if (Enum.TryParse(context.CustomerContext.CurrencyCode, true, out Currency currency))
+            return input with { Currency = currency };
+
+        if (!ValidateCurrency)
+            return input;
+
+        return new ValidationError(
+            $"Failed to calculate the default invoice currency for customer with code {context.CustomerContext.Code}",
+            nameof(UnvalidatedInvoice.Currency));
     }
 }
