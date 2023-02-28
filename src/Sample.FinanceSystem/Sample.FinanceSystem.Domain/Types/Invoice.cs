@@ -1,10 +1,11 @@
 ﻿using Sample.FinanceSystem.Domain.Types.CustomerTypes;
 using Sample.FinanceSystem.Domain.Types.InvoiceDetailLineTypes;
 using Sample.FinanceSystem.Domain.Types.InvoiceTypes;
-using static Sample.FinanceSystem.Domain.Types.Common.ErrorMessage;
+using Sample.FinanceSystem.Domain.Types.MoneyTypes;
 using static Sample.FinanceSystem.Domain.Types.PaymentTypes.Payment;
 
 namespace Sample.FinanceSystem.Domain.Types;
+
 [AsChoice]
 public static partial class InvoiceEntity
 {
@@ -12,123 +13,120 @@ public static partial class InvoiceEntity
 
     public record UnvalidatedInvoice : IInvoice
     {
-        public DateOnly CreationDate { get; private init; }
-        public Customer Customer { get; private init; }
+        public DateOnly? CreationDate { get; internal init; }
+        public DateOnly? DueDate { get; internal init; }
+        public UnvalidatedCustomer Customer { get; internal init; }
 
-        public IReadOnlyList<DetailLine> Lines { get; private init; }
+        public Currency? Currency { get; internal init; }
+        public UnvalidatedInvoiceTotal Total { get; internal init; }
+
+        public IReadOnlyList<UnvalidatedDetailLine> Lines { get; internal init; }
 
         internal UnvalidatedInvoice(
-            Customer customer,
-            DateOnly creationDate,
-            IEnumerable<DetailLine> lines)
+           DateOnly? creationDate,
+           DateOnly? dueDate,
+           UnvalidatedCustomer customer,
+           Currency? currency,
+           UnvalidatedInvoiceTotal total,
+           IEnumerable<UnvalidatedDetailLine> lines)
         {
-            Customer = customer;
-            CreationDate = creationDate;
-            Lines = lines.ToList().AsReadOnly();
-        }
-    }
-
-    public record CalculatedInvoice : IInvoice
-    {
-        public DateOnly CreationDate { get; private init; }
-        public DateOnly DueDate { get; private init; }
-        public Customer Customer { get; private init; }
-
-        public InvoiceTotal Total { get; private init; }
-
-        public IReadOnlyList<DetailLine> Lines { get; private init; }
-
-        internal CalculatedInvoice(
-            Customer customer,
-            DateOnly creationDate,
-            DateOnly dueDate,
-            InvoiceTotal total,
-            IEnumerable<DetailLine> lines)
-        {
-            Customer = customer;
             CreationDate = creationDate;
             DueDate = dueDate;
+            Customer = customer;
+            Currency = currency;
             Total = total;
             Lines = lines.ToList().AsReadOnly();
         }
     }
 
-    public record InvalidInvoice : IInvoice
+    public record ValidatedInvoice : IInvoice
     {
-        public DateOnly CreationDate { get; private init; }
-        public Customer Customer { get; private init; }
+        public DateOnly CreationDate { get; internal init; }
+        public DateOnly DueDate { get; internal init; }
+        public Customer Customer { get; internal init; }
 
-        public IReadOnlyList<DetailLine> Lines { get; private init; }
+        public Currency Currency { get; internal init; }
+        public InvoiceTotal Total { get; internal init; }
 
-        public IReadOnlyCollection<ValidationError> Errors { get; private init; }
+        public IReadOnlyList<DetailLine> Lines { get; internal init; }
 
-        internal InvalidInvoice(
-            Customer customer,
+        internal ValidatedInvoice(
             DateOnly creationDate,
-            IEnumerable<ValidationError> errors,
+            DateOnly dueDate,
+            Customer customer,
+            Currency currency,
+            InvoiceTotal total,
             IEnumerable<DetailLine> lines)
         {
-            Customer = customer;
             CreationDate = creationDate;
+            DueDate = dueDate;
+            Customer = customer;
+            Currency = currency;
+            Total = total;
             Lines = lines.ToList().AsReadOnly();
-            Errors = errors.ToList().AsReadOnly();
         }
     }
 
     public record ApprovedInvoice : IInvoice
     {
-        public DateOnly CreationDate { get; private init; }
-        public DateOnly DueDate { get; private init; }
-        public Customer Customer { get; private init; }
-        public InvoiceApproval Approval { get; set; }
+        public DateOnly CreationDate { get; internal init; }
+        public DateOnly DueDate { get; internal init; }
+        public Customer Customer { get; internal init; }
+        public InvoiceApproval Approval { get; internal set; }
 
-        public InvoiceTotal Total { get; private init; }
+        public Currency Currency { get; internal init; }
+        public InvoiceTotal Total { get; internal init; }
 
-        public IReadOnlyList<DetailLine> Lines { get; private init; }
+        public IReadOnlyList<DetailLine> Lines { get; internal init; }
 
         internal ApprovedInvoice(
-            Customer customer,
             DateOnly creationDate,
             DateOnly dueDate,
+            Customer customer,
+            Currency currency,
             InvoiceApproval approval,
             InvoiceTotal total,
             IEnumerable<DetailLine> lines)
         {
-            Customer = customer;
             CreationDate = creationDate;
             DueDate = dueDate;
-            Total = total;
+            Customer = customer;
             Approval = approval;
+            Currency = currency;
+            Total = total;
             Lines = lines.ToList().AsReadOnly();
         }
     }
 
     public record PaidInvoice : IInvoice
     {
-        public DateOnly CreationDate { get; private init; }
-        public DateOnly DueDate { get; private init; }
-        public Customer Customer { get; private init; }
-        public InvoiceApproval Approval { get; set; }
+        public DateOnly CreationDate { get; internal init; }
+        public DateOnly DueDate { get; internal init; }
+        public Customer Customer { get; internal init; }
+        public InvoiceApproval Approval { get; internal set; }
 
-        public InvoiceTotal Total { get; private init; }
+        public Currency Currency { get; internal init; }
+        public InvoiceTotal Total { get; internal init; }
 
-        public IReadOnlyList<DetailLine> Lines { get; private init; }
+        public IReadOnlyList<DetailLine> Lines { get; internal init; }
 
-        public IPayment Payment { get; private init; }
+        public IPayment Payment { get; internal init; }
 
         internal PaidInvoice(
-            Customer customer,
             DateOnly creationDate,
             DateOnly dueDate,
+            Customer customer,
+            Currency currency,
             InvoiceApproval approval,
             InvoiceTotal total,
             IPayment payment,
             IEnumerable<DetailLine> lines)
         {
-            Customer = customer;
             CreationDate = creationDate;
             DueDate = dueDate;
+            Customer = customer;
             Approval = approval;
+            Currency = currency;
             Total = total;
             Lines = lines.ToList().AsReadOnly();
             Payment = payment;

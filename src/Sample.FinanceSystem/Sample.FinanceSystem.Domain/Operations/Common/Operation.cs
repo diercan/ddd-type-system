@@ -1,6 +1,11 @@
-﻿namespace Sample.FinanceSystem.Domain.Operations.Common;
-public abstract class Operation<TInputEntity, TInterfaceEntity, TContext>
+﻿using LanguageExt;
+using static Sample.FinanceSystem.Domain.Types.Common.ErrorMessage;
+
+namespace Sample.FinanceSystem.Domain.Operations.Common;
+
+public abstract class Operation<TInputEntity, TOutputEntity, TInterfaceEntity, TContext>
     where TInputEntity : TInterfaceEntity
+    where TOutputEntity : TInterfaceEntity
 {
-    public abstract TInterfaceEntity Run(TInputEntity input, TContext context);
+    public abstract EitherAsync<IErrorMessage, TOutputEntity> Run(TInputEntity input, TContext context);
 }

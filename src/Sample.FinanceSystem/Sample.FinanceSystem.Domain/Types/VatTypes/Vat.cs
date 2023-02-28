@@ -3,3 +3,7 @@
 public record Vat(
     VatCode Code,
     VatPercentage Percentage);
+
+public record UnvalidatedVat(
+    string Code,
+    decimal? Percentage = null);

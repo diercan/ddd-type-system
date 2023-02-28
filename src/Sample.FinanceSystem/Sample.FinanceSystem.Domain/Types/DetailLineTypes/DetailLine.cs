@@ -9,3 +9,9 @@ public record DetailLine(
     LedgerCode LedgerCode,
     Vat Vat,
     DetailLineTotal Total);
+
+public record UnvalidatedDetailLine(
+    string? Description,
+    UnvalidatedLedgerCode LedgerCode,
+    UnvalidatedVat Vat,
+    UnvalidatedDetailLineTotal Total);
