@@ -8,7 +8,7 @@ using static Sample.FinanceSystem.Domain.Types.InvoiceEntity;
 
 namespace Sample.FinanceSystem.Domain.Operations.Calculations;
 
-internal class CalculateVatPercentageOperation : InvoiceOperation<UnvalidatedInvoice, UnvalidatedInvoice>
+public class CalculateVatPercentageOperation : InvoiceOperation<UnvalidatedInvoice, UnvalidatedInvoice>
 {
     public bool ValidateVatPercentage { get; init; } = false;
 
@@ -27,10 +27,11 @@ internal class CalculateVatPercentageOperation : InvoiceOperation<UnvalidatedInv
                 decimal? vatPercentage = context.VatContext
                     .Where(v => v.StarDate <= input.CreationDate && v.Code == l.Vat.Code)
                     .OrderBy(v => v.StarDate)
-                    .Select(v => v.Percentage)
-                    .FirstOrDefault();
+                    .FirstOrDefault()?.Percentage;
 
-                return l with { Vat = l.Vat with { Percentage = vatPercentage } };
+                return vatPercentage.HasValue
+                    ? l with { Vat = l.Vat with { Percentage = vatPercentage } }
+                    : l;
             })
             .ToList()
             .AsReadOnly();

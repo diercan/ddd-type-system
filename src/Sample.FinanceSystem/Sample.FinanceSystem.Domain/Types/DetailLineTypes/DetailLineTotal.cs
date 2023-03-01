@@ -8,6 +8,6 @@ public record DetailLineTotal(
     Money Tax);
 
 public record UnvalidatedDetailLineTotal(
-    decimal? Gross,
-    decimal? Net, 
-    decimal? Tax);
+    decimal? Gross = null,
+    decimal? Net = null, 
+    decimal? Tax = null);

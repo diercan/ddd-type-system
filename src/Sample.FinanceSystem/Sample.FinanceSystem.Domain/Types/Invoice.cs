@@ -22,7 +22,7 @@ public static partial class InvoiceEntity
 
         public IReadOnlyList<UnvalidatedDetailLine> Lines { get; internal init; }
 
-        internal UnvalidatedInvoice(
+        public UnvalidatedInvoice(
            DateOnly? creationDate,
            DateOnly? dueDate,
            UnvalidatedCustomer customer,

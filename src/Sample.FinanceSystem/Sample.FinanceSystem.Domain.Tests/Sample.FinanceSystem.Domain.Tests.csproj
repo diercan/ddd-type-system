@@ -9,6 +9,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Operations\Calculations\CalculateVatPercentageContexts.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Operations\Calculations\CalculateVatPercentageOperation\CalculateVatPercentageContexts.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="FluentAssertions" Version="6.9.0" />
     <PackageReference Include="LanguageExt.Core" Version="4.4.2" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.2" />
