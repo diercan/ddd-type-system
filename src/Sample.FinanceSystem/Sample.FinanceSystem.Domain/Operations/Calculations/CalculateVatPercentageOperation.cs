@@ -1,6 +1,7 @@
 ﻿using LanguageExt;
 using Sample.FinanceSystem.Domain.Operations.Common;
 using Sample.FinanceSystem.Domain.Types;
+using Sample.FinanceSystem.Domain.Types.DetailLineTypes;
 using Sample.FinanceSystem.Domain.Types.InvoiceDetailLineTypes;
 using Sample.FinanceSystem.Domain.Types.VatTypes;
 using static Sample.FinanceSystem.Domain.Types.Common.ErrorMessage;
@@ -47,6 +48,6 @@ public class CalculateVatPercentageOperation : InvoiceOperation<UnvalidatedInvoi
                 return new ValidationError($"Invalid VAT codes: {invalidVatCodes.Aggregate("", (err, c) => $"{err}, {c.Code}")}");
         }
 
-        return input with { Lines = linesWithVat };
+        return input with { Lines = linesWithVat.AsDetailLines() };
     }
 }
