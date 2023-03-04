@@ -12,7 +12,7 @@ namespace Sample.FinanceSystem.Domain.Operations.Calculations;
 internal class CalculateDetailLinesTotalOperation : InvoiceOperation<UnvalidatedInvoice, UnvalidatedInvoice>
 {
     public override EitherAsync<IErrorMessage, UnvalidatedInvoice> Run(UnvalidatedInvoice input, InvoiceContext context)
-        => input with { Lines = input.Lines.Select(CalculateDetailLine).ToList().AsReadOnly() };
+        => input with { Lines = input.Lines.Select(CalculateDetailLine).AsDetailLines() };
 
     private static UnvalidatedDetailLine CalculateDetailLine(UnvalidatedDetailLine invoiceLine)
         => invoiceLine with

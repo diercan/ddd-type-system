@@ -7,6 +7,6 @@ public record InvoiceTotal(
     Money Tax);
 
 public record UnvalidatedInvoiceTotal(
-    decimal? Gross,
-    decimal? Net,
-    decimal? Tax);
+    decimal? Gross = null,
+    decimal? Net = null,
+    decimal? Tax = null);

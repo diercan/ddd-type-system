@@ -1,6 +1,7 @@
 ﻿using LanguageExt;
 using Sample.FinanceSystem.Domain.Operations.Common;
 using Sample.FinanceSystem.Domain.Types;
+using Sample.FinanceSystem.Domain.Types.DetailLineTypes;
 using Sample.FinanceSystem.Domain.Types.InvoiceDetailLineTypes;
 using Sample.FinanceSystem.Domain.Types.VatTypes;
 using static Sample.FinanceSystem.Domain.Types.Common.ErrorMessage;
@@ -8,7 +9,7 @@ using static Sample.FinanceSystem.Domain.Types.InvoiceEntity;
 
 namespace Sample.FinanceSystem.Domain.Operations.Calculations;
 
-internal class CalculateVatPercentageOperation : InvoiceOperation<UnvalidatedInvoice, UnvalidatedInvoice>
+public class CalculateVatPercentageOperation : InvoiceOperation<UnvalidatedInvoice, UnvalidatedInvoice>
 {
     public bool ValidateVatPercentage { get; init; } = false;
 
@@ -27,10 +28,11 @@ internal class CalculateVatPercentageOperation : InvoiceOperation<UnvalidatedInv
                 decimal? vatPercentage = context.VatContext
                     .Where(v => v.StarDate <= input.CreationDate && v.Code == l.Vat.Code)
                     .OrderBy(v => v.StarDate)
-                    .Select(v => v.Percentage)
-                    .FirstOrDefault();
+                    .FirstOrDefault()?.Percentage;
 
-                return l with { Vat = l.Vat with { Percentage = vatPercentage } };
+                return vatPercentage.HasValue
+                    ? l with { Vat = l.Vat with { Percentage = vatPercentage } }
+                    : l;
             })
             .ToList()
             .AsReadOnly();
@@ -46,6 +48,6 @@ internal class CalculateVatPercentageOperation : InvoiceOperation<UnvalidatedInv
                 return new ValidationError($"Invalid VAT codes: {invalidVatCodes.Aggregate("", (err, c) => $"{err}, {c.Code}")}");
         }
 
-        return input with { Lines = linesWithVat };
+        return input with { Lines = linesWithVat.AsDetailLines() };
     }
 }

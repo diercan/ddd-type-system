@@ -1,4 +1,5 @@
 ﻿using Sample.FinanceSystem.Domain.Types.CustomerTypes;
+using Sample.FinanceSystem.Domain.Types.DetailLineTypes;
 using Sample.FinanceSystem.Domain.Types.InvoiceDetailLineTypes;
 using Sample.FinanceSystem.Domain.Types.InvoiceTypes;
 using Sample.FinanceSystem.Domain.Types.MoneyTypes;
@@ -20,22 +21,22 @@ public static partial class InvoiceEntity
         public Currency? Currency { get; internal init; }
         public UnvalidatedInvoiceTotal Total { get; internal init; }
 
-        public IReadOnlyList<UnvalidatedDetailLine> Lines { get; internal init; }
+        public UnvalidatedDetailLines Lines { get; internal init; }
 
-        internal UnvalidatedInvoice(
+        public UnvalidatedInvoice(
            DateOnly? creationDate,
            DateOnly? dueDate,
            UnvalidatedCustomer customer,
            Currency? currency,
            UnvalidatedInvoiceTotal total,
-           IEnumerable<UnvalidatedDetailLine> lines)
+           UnvalidatedDetailLines lines)
         {
             CreationDate = creationDate;
             DueDate = dueDate;
             Customer = customer;
             Currency = currency;
             Total = total;
-            Lines = lines.ToList().AsReadOnly();
+            Lines = lines;
         }
     }
 
@@ -48,7 +49,7 @@ public static partial class InvoiceEntity
         public Currency Currency { get; internal init; }
         public InvoiceTotal Total { get; internal init; }
 
-        public IReadOnlyList<DetailLine> Lines { get; internal init; }
+        public DetailLines Lines { get; internal init; }
 
         internal ValidatedInvoice(
             DateOnly creationDate,
@@ -56,14 +57,14 @@ public static partial class InvoiceEntity
             Customer customer,
             Currency currency,
             InvoiceTotal total,
-            IEnumerable<DetailLine> lines)
+            DetailLines lines)
         {
             CreationDate = creationDate;
             DueDate = dueDate;
             Customer = customer;
             Currency = currency;
             Total = total;
-            Lines = lines.ToList().AsReadOnly();
+            Lines = lines;
         }
     }
 
@@ -77,7 +78,7 @@ public static partial class InvoiceEntity
         public Currency Currency { get; internal init; }
         public InvoiceTotal Total { get; internal init; }
 
-        public IReadOnlyList<DetailLine> Lines { get; internal init; }
+        public DetailLines Lines { get; internal init; }
 
         internal ApprovedInvoice(
             DateOnly creationDate,
@@ -86,7 +87,7 @@ public static partial class InvoiceEntity
             Currency currency,
             InvoiceApproval approval,
             InvoiceTotal total,
-            IEnumerable<DetailLine> lines)
+            DetailLines lines)
         {
             CreationDate = creationDate;
             DueDate = dueDate;
@@ -94,7 +95,7 @@ public static partial class InvoiceEntity
             Approval = approval;
             Currency = currency;
             Total = total;
-            Lines = lines.ToList().AsReadOnly();
+            Lines = lines;
         }
     }
 
@@ -108,7 +109,7 @@ public static partial class InvoiceEntity
         public Currency Currency { get; internal init; }
         public InvoiceTotal Total { get; internal init; }
 
-        public IReadOnlyList<DetailLine> Lines { get; internal init; }
+        public DetailLines Lines { get; internal init; }
 
         public IPayment Payment { get; internal init; }
 
@@ -120,7 +121,7 @@ public static partial class InvoiceEntity
             InvoiceApproval approval,
             InvoiceTotal total,
             IPayment payment,
-            IEnumerable<DetailLine> lines)
+            DetailLines lines)
         {
             CreationDate = creationDate;
             DueDate = dueDate;
@@ -128,7 +129,7 @@ public static partial class InvoiceEntity
             Approval = approval;
             Currency = currency;
             Total = total;
-            Lines = lines.ToList().AsReadOnly();
+            Lines = lines;
             Payment = payment;
         }
     }
