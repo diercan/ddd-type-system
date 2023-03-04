@@ -1,4 +1,6 @@
-﻿namespace Sample.FinanceSystem.Domain.Types.Common
+﻿using System.Text;
+
+namespace Sample.FinanceSystem.Domain.Types.Common
 {
     [AsChoice]
     public static partial class ErrorMessage
@@ -20,6 +22,24 @@
             public ValidationError(string message) : this(message, null) { }
 
             public override string ToString() => Message;
+        }
+
+        public record AggregatedValidationError : IErrorMessage
+        {
+            public IReadOnlyCollection<ValidationError> Errors { get; private init; }
+
+            public AggregatedValidationError(IEnumerable<ValidationError> validationErrors)
+            {
+                Errors = validationErrors.ToList().AsReadOnly();
+            }
+
+            public override string ToString() =>
+                Errors.Aggregate(
+                 new StringBuilder(),
+                    (builder, error) => builder.Length is 0
+                        ? builder.Append(error.ToString())
+                        : builder.AppendLine(error.ToString())
+                ).ToString();
         }
 
         public record UnexpectedErrorMessage : IErrorMessage
