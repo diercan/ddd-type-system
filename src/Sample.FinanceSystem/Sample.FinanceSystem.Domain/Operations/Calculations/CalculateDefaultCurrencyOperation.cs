@@ -1,5 +1,4 @@
-﻿using LanguageExt;
-using Sample.FinanceSystem.Domain.Operations.Common;
+﻿using Sample.FinanceSystem.Domain.Operations.Common;
 using Sample.FinanceSystem.Domain.Types;
 using Sample.FinanceSystem.Domain.Types.MoneyTypes;
 using static Sample.FinanceSystem.Domain.Types.Common.ErrorMessage;
@@ -7,11 +6,11 @@ using static Sample.FinanceSystem.Domain.Types.InvoiceEntity;
 
 namespace Sample.FinanceSystem.Domain.Operations.Calculations;
 
-internal class CalculateDefaultCurrencyOperation : InvoiceOperation<UnvalidatedInvoice, UnvalidatedInvoice>
+internal class CalculateDefaultCurrencyOperation : InvoiceOperation<UnvalidatedInvoice>
 {
     public bool ValidateCurrency { get; init; } = false;
 
-    public override EitherAsync<IErrorMessage, UnvalidatedInvoice> Run(UnvalidatedInvoice input, InvoiceContext context)
+    public override IInvoice Run(UnvalidatedInvoice input, InvoiceContext context)
     {
         if (input.Currency != null)
             return input;
@@ -22,8 +21,8 @@ internal class CalculateDefaultCurrencyOperation : InvoiceOperation<UnvalidatedI
         if (!ValidateCurrency)
             return input;
 
-        return new ValidationError(
+        return new InvalidInvoice(input, new ValidationError(
             $"Failed to calculate the default invoice currency for customer with code {context.CustomerContext.Code}",
-            nameof(UnvalidatedInvoice.Currency));
+            nameof(UnvalidatedInvoice.Currency)));
     }
 }

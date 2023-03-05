@@ -2,6 +2,7 @@
 using Sample.FinanceSystem.Domain.Types.InvoiceDetailLineTypes;
 using Sample.FinanceSystem.Domain.Types.InvoiceTypes;
 using Sample.FinanceSystem.Domain.Types.MoneyTypes;
+using static Sample.FinanceSystem.Domain.Types.Common.ErrorMessage;
 using static Sample.FinanceSystem.Domain.Types.PaymentTypes.Payment;
 
 namespace Sample.FinanceSystem.Domain.Types;
@@ -36,6 +37,33 @@ public static partial class InvoiceEntity
             Currency = currency;
             Total = total;
             Lines = lines.ToList().AsReadOnly();
+        }
+    }
+
+    public record InvalidInvoice : IInvoice
+    {
+        public DateOnly? CreationDate { get; internal init; }
+        public DateOnly? DueDate { get; internal init; }
+        public UnvalidatedCustomer Customer { get; internal init; }
+
+        public Currency? Currency { get; internal init; }
+        public UnvalidatedInvoiceTotal Total { get; internal init; }
+
+        public IReadOnlyList<UnvalidatedDetailLine> Lines { get; internal init; }
+
+        public IErrorMessage ErrorMessage { get; internal init; }
+
+        internal InvalidInvoice(
+           UnvalidatedInvoice unvalidatedInvoice,
+           IErrorMessage errorMessage)
+        {
+            CreationDate = unvalidatedInvoice.CreationDate;
+            DueDate = unvalidatedInvoice.DueDate;
+            Customer = unvalidatedInvoice.Customer;
+            Currency = unvalidatedInvoice.Currency;
+            Total = unvalidatedInvoice.Total;
+            Lines = unvalidatedInvoice.Lines;
+            ErrorMessage = errorMessage;
         }
     }
 

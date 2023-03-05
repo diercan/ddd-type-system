@@ -8,11 +8,11 @@ using static Sample.FinanceSystem.Domain.Types.InvoiceEntity;
 
 namespace Sample.FinanceSystem.Domain.Operations.Calculations;
 
-internal class CalculateVatPercentageOperation : InvoiceOperation<UnvalidatedInvoice, UnvalidatedInvoice>
+internal class CalculateVatPercentageOperation : InvoiceOperation<UnvalidatedInvoice>
 {
     public bool ValidateVatPercentage { get; init; } = false;
 
-    public override EitherAsync<IErrorMessage, UnvalidatedInvoice> Run(UnvalidatedInvoice input, InvoiceContext context)
+    public override IInvoice Run(UnvalidatedInvoice input, InvoiceContext context)
     {
         if (input.Lines.All(l => l.Vat.Percentage.HasValue))
             return input;
@@ -43,7 +43,8 @@ internal class CalculateVatPercentageOperation : InvoiceOperation<UnvalidatedInv
                 .ToList();
 
             if (invalidVatCodes.Any())
-                return new ValidationError($"Invalid VAT codes: {invalidVatCodes.Aggregate("", (err, c) => $"{err}, {c.Code}")}");
+                return new InvalidInvoice(input,
+                    new ValidationError($"Invalid VAT codes: {invalidVatCodes.Aggregate("", (err, c) => $"{err}, {c.Code}")}"));
         }
 
         return input with { Lines = linesWithVat };

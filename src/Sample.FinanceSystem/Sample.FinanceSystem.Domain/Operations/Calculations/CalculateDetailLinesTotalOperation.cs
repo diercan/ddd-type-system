@@ -4,14 +4,13 @@ using Sample.FinanceSystem.Domain.Types;
 using Sample.FinanceSystem.Domain.Types.DetailLineTypes;
 using Sample.FinanceSystem.Domain.Types.InvoiceDetailLineTypes;
 using Sample.FinanceSystem.Domain.Types.VatTypes;
-using static Sample.FinanceSystem.Domain.Types.Common.ErrorMessage;
 using static Sample.FinanceSystem.Domain.Types.InvoiceEntity;
 
 namespace Sample.FinanceSystem.Domain.Operations.Calculations;
 
-internal class CalculateDetailLinesTotalOperation : InvoiceOperation<UnvalidatedInvoice, UnvalidatedInvoice>
+internal class CalculateDetailLinesTotalOperation : InvoiceOperation<UnvalidatedInvoice>
 {
-    public override EitherAsync<IErrorMessage, UnvalidatedInvoice> Run(UnvalidatedInvoice input, InvoiceContext context)
+    public override IInvoice Run(UnvalidatedInvoice input, InvoiceContext context)
         => input with { Lines = input.Lines.Select(CalculateDetailLine).ToList().AsReadOnly() };
 
     private static UnvalidatedDetailLine CalculateDetailLine(UnvalidatedDetailLine invoiceLine)
