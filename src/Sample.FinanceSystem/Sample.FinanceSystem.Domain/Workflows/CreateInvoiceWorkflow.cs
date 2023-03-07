@@ -14,19 +14,6 @@ public class CreateInvoiceWorkflow : Workflow<UnvalidatedInvoice, InvoiceContext
         IRepository<UnvalidatedInvoice, InvoiceContext, ValidatedInvoice> repository,
         IResultMapper<ValidatedInvoice, IInvoiceCreatedEvent> resultMapper) : base(repository, resultMapper) { }
 
-    //protected override EitherAsync<IErrorMessage, ValidatedInvoice> RunBusinessRules(UnvalidatedInvoice inputEntity, InvoiceContext context)
-    //    => from invoiceWithDefaults in CalculateInvoiceDefaults(inputEntity, context)
-    //       from validInvoice in ValidateInvoice(invoiceWithDefaults, context)
-    //       from calculatedInvoice in CalculateInvoiceTotals(validInvoice, context)
-    //       select calculatedInvoice;
-
-    //private static EitherAsync<IErrorMessage, UnvalidatedInvoice> ValidateInvoice(UnvalidatedInvoice invoice, InvoiceContext context)
-    //    => new ValidateInvoiceOperation().Run(invoice, context);
-    //private static EitherAsync<IErrorMessage, UnvalidatedInvoice> CalculateInvoiceDefaults(UnvalidatedInvoice invoice, InvoiceContext context)
-    //    => new CalculateInvoiceDefaultsOperation().Run(invoice, context);
-    //private static EitherAsync<IErrorMessage, ValidatedInvoice> CalculateInvoiceTotals(UnvalidatedInvoice invoice, InvoiceContext context)
-    //    => new CalculateInvoiceTotalsOperation().Run(invoice, context);
-
     protected override EitherAsync<IErrorMessage, ValidatedInvoice> RunBusinessRules(UnvalidatedInvoice inputEntity, InvoiceContext context)
         => from invoiceWithDefaults in CalculateInvoiceDefaults(inputEntity, context)
            from invoiceWithTotal in CalculateInvoiceTotals(invoiceWithDefaults, context)

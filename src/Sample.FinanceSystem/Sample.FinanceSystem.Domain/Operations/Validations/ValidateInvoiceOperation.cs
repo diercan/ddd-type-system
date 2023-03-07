@@ -1,7 +1,7 @@
-﻿using LanguageExt;
+﻿using System.Collections.Immutable;
+using LanguageExt;
 using Sample.FinanceSystem.Domain.Operations.Common;
 using Sample.FinanceSystem.Domain.Types;
-using System.Collections.Immutable;
 using static Sample.FinanceSystem.Domain.Types.Common.ErrorMessage;
 using static Sample.FinanceSystem.Domain.Types.InvoiceEntity;
 
@@ -13,10 +13,8 @@ namespace Sample.FinanceSystem.Domain.Operations.Validations
         {
             IEnumerable<ValidationError> errors = ValidateDefaults(input).ToImmutableList();
 
-            // Todo: We need to support multiple validation errors
-
             return errors.Any()
-                ? errors.First()
+                ? new AggregatedValidationError(errors)
                 : input;
         }
 
