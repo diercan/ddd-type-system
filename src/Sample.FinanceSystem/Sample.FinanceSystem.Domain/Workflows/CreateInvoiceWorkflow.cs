@@ -1,6 +1,6 @@
 ﻿using LanguageExt;
+using Sample.FinanceSystem.Domain.Operations;
 using Sample.FinanceSystem.Domain.Operations.Calculations;
-using Sample.FinanceSystem.Domain.Operations.Common;
 using Sample.FinanceSystem.Domain.Operations.Validations;
 using Sample.FinanceSystem.Domain.Types;
 using Sample.FinanceSystem.Domain.Workflows.Common;
@@ -17,19 +17,22 @@ public class CreateInvoiceWorkflow : Workflow<UnvalidatedInvoice, InvoiceContext
         IResultMapper<ValidatedInvoice, IInvoiceCreatedEvent> resultMapper) : base(repository, resultMapper) { }
 
     protected override EitherAsync<IErrorMessage, ValidatedInvoice> RunBusinessRules(UnvalidatedInvoice inputEntity, InvoiceContext context) => inputEntity
-        .RunIfMatch(context, new CalculateDefaultCreationDate())
-        .RunIfMatch(context, new CalculateDefaultCustomerDetailsOperation())
-        .RunIfMatch(context, new CalculateDueDateOperation())
-        .RunIfMatch(context, new CalculateDefaultCurrencyOperation())
-        .RunIfMatch(context, new CalculateVatPercentageOperation())
-        .RunIfMatch(context, new CalculateDetailLinesTotalOperation())
-        .RunIfMatch(context, new CalculateInvoiceTotalOperation())
-        .RunIfMatch(context, new ValidateCalculatedInvoiceOperation())
-        .Match<Either<IErrorMessage, ValidatedInvoice>>(
-            whenApprovedInvoice: invoice => Left<IErrorMessage>(new UnexpectedErrorMessage("Approved invoice is an invalid state")),
+        .RunIf<UnvalidatedInvoice, CalculateDefaultCreationDate>(context)
+        .RunIf<UnvalidatedInvoice, CalculateDefaultCustomerDetailsOperation>(context)
+        .RunIf<UnvalidatedInvoice, CalculateDueDateOperation>(context)
+        .RunIf<UnvalidatedInvoice, CalculateDefaultCurrencyOperation>(context)
+        .RunIf<UnvalidatedInvoice, CalculateVatPercentageOperation>(context)
+        .RunIf<UnvalidatedInvoice, CalculateDetailLinesTotalOperation>(context)
+        .RunIf<UnvalidatedInvoice, CalculateInvoiceTotalOperation>(context)
+        .RunIf<UnvalidatedInvoice, ValidateCalculatedInvoiceOperation>(context)
+        .Match(
+            whenValidatedInvoice: invoice => invoice,
             whenInvalidInvoice: invoice => Left(invoice.ErrorMessage),
-            whenPaidInvoice: invoice => Left<IErrorMessage>(new UnexpectedErrorMessage("Paid invoice is an invalid state")),
-            whenUnvalidatedInvoice: invoice => Left<IErrorMessage>(new UnexpectedErrorMessage("Unvalidated invoice is an invalid state")),
-            whenValidatedInvoice: invoice => invoice)
+            whenApprovedInvoice: invoice => GenerateInvalidStateErrorMessage("Approved"),
+            whenPaidInvoice: invoice => GenerateInvalidStateErrorMessage("Paid"),
+            whenUnvalidatedInvoice: (Func<UnvalidatedInvoice, Either<IErrorMessage, ValidatedInvoice>>)(invoice => GenerateInvalidStateErrorMessage("Unvalidated")))
         .ToAsync();
+
+    private static EitherLeft<IErrorMessage> GenerateInvalidStateErrorMessage(string stateName) =>
+        Left<IErrorMessage>(new UnexpectedErrorMessage($"{stateName} invoice is an invalid state"));
 }
